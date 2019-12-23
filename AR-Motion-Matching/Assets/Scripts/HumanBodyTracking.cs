@@ -6,6 +6,7 @@ using UnityEngine.XR.ARSubsystems;
 
 public class HumanBodyTracking : MonoBehaviour
 {
+
     [SerializeField]
     [Tooltip("The ARHumanBodyManager which will produce frame events.")]
     private ARHumanBodyManager humanBodyManager;
