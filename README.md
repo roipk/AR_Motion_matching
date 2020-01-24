@@ -1,2 +1,6 @@
 # AR_Motion_matching
-Final project 2020 - AR Motion matching
+> Using only a phones camera, pratice Martial arts techniques at the comfort of your own home. 
+
+AR Motion matching will scan the users movement and compare it to an ideal motion of a choosen technique.
+ARMm will in return give a valid comparision and feedback regarding the users motion.
+This repository will contain the C# code of a UNITY project.
