@@ -39,6 +39,7 @@ public class HumanBodyTracking : MonoBehaviour
     {
         if (bodyJoints == null)
         {
+        //Sets the joints for the skeleton
             bodyJoints = new Dictionary<JointIndices3D, Transform>
             {
                 { JointIndices3D.Head, GetNewJointPrefab(arBodyT) },
@@ -124,6 +125,7 @@ public class HumanBodyTracking : MonoBehaviour
         jointT.localScale = bodyJoint.anchorScale * jointScaleModifier;
     }
 
+    //The function is called whenever a change in captured human body is noticed.
     void OnHumanBodiesChanged(ARHumanBodiesChangedEventArgs eventArgs)
     {
         foreach (ARHumanBody humanBody in eventArgs.added)
