@@ -11,17 +11,18 @@ public class Data_Handler : MonoBehaviour
 	string device_path;
 	private int frames = 0;
 	DateTime current_time;
-    //public GameObject tempCube;
-    string[] rowDataTemp = new string[5];
-    private List<string[]> rowData = new List<string[]>();
+    	//public GameObject tempCube;
+    	string[] rowDataTemp = new string[5];
+    	private List<string[]> rowData = new List<string[]>();
 
 	// Start is called before the first frame update
 	void Start()
 	{
+		//Gets the device path
 		device_path = getPath();
 
 		Debug.Log("datapath: " + device_path);
-
+		//Creates a CSV
 		Create_CSV();
 	}
 
@@ -29,17 +30,13 @@ public class Data_Handler : MonoBehaviour
 	void Update()
 	{
 		frames++;
-		if (frames % 30 == 0)
-		{
-           
-            //Debug_Write_CSV();
-            if(HumanBodyTracking.Body_flag)
-                Write_CSV();
+		//Writes to the CSV once every 30 frames
+		if (frames % 30 == 0){
+			if(HumanBodyTracking.Body_flag)
+                		Write_CSV();
+		}
            frames = 0;
-        }
-
-        //Invoke("Write_CSV", 0.7f);
-		
+        
 	}
 
     private string get_data_path()
@@ -53,8 +50,10 @@ public class Data_Handler : MonoBehaviour
         return datafile;
     }
 
+//Writes the body location to the CSV
     void Create_CSV()
 	{
+	//Only saves a few of the body locations to not overflow with data
         rowDataTemp[0] = "Time";
         rowDataTemp[1] = "Head_cords";
         rowDataTemp[2] = "Neck_cords";
@@ -146,7 +145,7 @@ public class Data_Handler : MonoBehaviour
             }
         }
 
-
+	//Changes the string to fit with CSV reqs
         rowDataTemp = new string[5];
         rowDataTemp[0] = current_time.ToString().Replace(",", "~").Replace(" ", ""); 
         rowDataTemp[1] = Head_vec.ToString().Replace(",", "~").Replace(" ", ""); 
