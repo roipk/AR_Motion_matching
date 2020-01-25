@@ -63,6 +63,7 @@ public class Body_Distance : MonoBehaviour
     {
         if (HumanBodyTracking.bodyJoints != null)
         {
+        //Goes over all the body parts and sums the distance functions results.
             foreach (KeyValuePair<JointIndices3D, Transform> item in HumanBodyTracking.bodyJoints)
             {
 
@@ -141,7 +142,7 @@ public class Body_Distance : MonoBehaviour
                     default: break;
                 }
             }
-
+            //Saves the distances in different blocks in case we want to give them different weights.
             dis_FullHead = dis_Head + dis_Neck;
             dis_FullLeftArm = dis_LeftArm + dis_LeftForearm + dis_LeftHand;
             dis_FullRightArm = dis_RightArm + dis_RightForearm + dis_RightHand;
