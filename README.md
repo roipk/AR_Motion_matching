@@ -5,4 +5,4 @@ AR Motion matching will scan the users movement and compare it to an ideal motio
 ARMm will in return give a valid comparison and feedback regarding the users motion.
 This repository will contain the C# code of a UNITY project.
 
-![Logo](https://imgur.com/a/ckNjhdz)
+![Logo](https://i.imgur.com/LxdP1Fn.jpg)
