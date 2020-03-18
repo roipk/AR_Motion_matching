@@ -1,9 +1,17 @@
-﻿using System;
+﻿/*************
+ *This class handles the main UI components.
+ *The basic flow of the UI will run from here.
+ *
+ *
+ * ***********/
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ViewHandler : MonoBehaviour
 {
@@ -244,6 +252,11 @@ public class ViewHandler : MonoBehaviour
         {
             tech_name = tech;
         }
+    }
+
+    public void loadARMm()
+    {
+        SceneManager.LoadScene("ARMm", LoadSceneMode.Single);
     }
 
 
