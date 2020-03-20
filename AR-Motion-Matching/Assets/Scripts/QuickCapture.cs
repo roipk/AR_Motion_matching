@@ -16,9 +16,12 @@ public class QuickCapture : MonoBehaviour
     public Button start_btn;
     public Button stop_btn;
     public InputField Move_name;
+    public Text record_mode;
     bool recording_state = false;
     int frames = 0;
     string movement_path = "";
+    string target_folder = "/TargetMotionDB";
+    string rec_on = "Recording", rec_off = "Not Recording";
 
     // Start is called before the first frame update
     void Start()
@@ -48,20 +51,31 @@ public class QuickCapture : MonoBehaviour
     {
         foreach (KeyValuePair<JointIndices3D, Transform> BodyPart in HumanBodyTracking.bodyJoints)
         {
-
+            
         }
     }
 
-    string device_path()
+    void add_tags()
     {
-        return null;
+        foreach (KeyValuePair<JointIndices3D, Transform> BodyPart in HumanBodyTracking.bodyJoints)
+        {
+            BodyPart.Value.gameObject.tag = "BodyPart";
+        }
     }
 
-    IEnumerator WaitForSec(float n)    {        yield return new WaitForSeconds(n);
-#if UNITY_EDITOR        string body_location = Path.Combine(Application.dataPath + "/TargetMotionDB", gameObject.name + ".txt");
-#elif UNITY_IOS        string body_location = Path.Combine(Application.persistentDataPath + "/TargetMotionDB", file_name.text + ".txt");
-#endif       //File.WriteAllText(body_location, json);
+    bool get_device_path()
+    {
+        //Checks if the technique name is a valid one
+        if (Move_name.text.LastIndexOfAny(Path.GetInvalidFileNameChars()) >= 0 && !Move_name.text.Equals(string.Empty))
+            return false;
+#if UNITY_EDITOR        movement_path = Path.Combine(Application.dataPath + target_folder, Move_name.text + ".txt");
+
+
+#elif UNITY_IOS        movement_path = Path.Combine(Application.persistentDataPath + target_folder, Move_name.text + ".txt");
+#endif
+        return true;
     }
+
 
     void Start_record()
     {
@@ -71,12 +85,36 @@ public class QuickCapture : MonoBehaviour
             Debug.LogWarning("Human Body not detected.");
             return;
         }
+        //If a invalid name was entered, do nothing.
+        if (!get_device_path())
+        {
+            Debug.Log("movement name not valid.");
+            return;
+        }
         recording_state = true;
+        record_mode.text = rec_on;
 
     }
 
     void Stop_record()
     {
         recording_state = false;
+        record_mode.text = rec_off;
+    }
+
+    [SerializeField]
+    public class BodyJson
+    {
+        public string name;
+        public float time;
+        public Vector3 position;
+        public Quaternion rotation;
+        public BodyJson(string newName, float t, Vector3 pos, Quaternion rot)
+        {
+            time = t;
+            position = pos;
+            rotation = rot;
+            name = newName;
+        }
     }
 }
