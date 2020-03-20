@@ -22,10 +22,12 @@ public class QuickCapture : MonoBehaviour
     string movement_path = "";
     string target_folder = "/TargetMotionDB";
     string rec_on = "Recording", rec_off = "Not Recording";
+    Animation anim;    AnimationClip clip;
 
     // Start is called before the first frame update
     void Start()
     {
+        clip = new AnimationClip();        clip.legacy = true;
         start_btn.onClick.AddListener(Start_record);
         stop_btn.onClick.AddListener(Stop_record);
     }
