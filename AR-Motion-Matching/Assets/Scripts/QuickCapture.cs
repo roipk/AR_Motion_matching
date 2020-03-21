@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine.UI;
 
 public class QuickCapture : MonoBehaviour
@@ -22,6 +23,7 @@ public class QuickCapture : MonoBehaviour
     string movement_path = "";
     string target_folder = "/TargetMotionDB";
     string rec_on = "Recording", rec_off = "Not Recording";
+    float time = 0.0f;
     Animation anim;    AnimationClip clip;
 
     // Start is called before the first frame update
@@ -51,10 +53,29 @@ public class QuickCapture : MonoBehaviour
     //Captures the body movements and writes their locations
     void record_movement()
     {
+        BinaryFormatter bf = new BinaryFormatter();        FileStream tech_file = File.Create(movement_path);
         foreach (KeyValuePair<JointIndices3D, Transform> BodyPart in HumanBodyTracking.bodyJoints)
         {
-            
+            //Writes the name of the body part
+            bf.Serialize(tech_file, BodyPart.Key);
+            //Writes the current time
+            bf.Serialize(tech_file, time);
+            //Create a SerializableVector3 from the bodypart location
+            SerializableVector3 body_holder_pos = new SerializableVector3(BodyPart.Value.position.x, BodyPart.Value.position.y, BodyPart.Value.position.z);
+            //Writes the new data into the file
+            bf.Serialize(tech_file, body_holder_pos);
+            //Create a SerializableQuaternion from the bodypart rotation
+            SerializableQuaternion body_holder_quat = new SerializableQuaternion(BodyPart.Value.rotation.x, BodyPart.Value.rotation.y, BodyPart.Value.rotation.z, BodyPart.Value.rotation.w);
+            //Writes the new data into the file
+            bf.Serialize(tech_file, body_holder_quat);
         }
+        time += Time.deltaTime;
+        tech_file.Close();
+    }
+
+    void load_movement()
+    {
+        if (File.Exists(movement_path))        {            BinaryFormatter bf = new BinaryFormatter();            FileStream tech_file = File.Open(movement_path, FileMode.Open);            string tech_name = (string)bf.Deserialize(tech_file);            float tech_time = (float)bf.Deserialize(tech_file);            SerializableVector3 tech_vector = (SerializableVector3)bf.Deserialize(tech_file);            SerializableQuaternion tech_rot = (SerializableQuaternion)bf.Deserialize(tech_file);                        tech_file.Close();        }
     }
 
     void add_tags()
@@ -70,10 +91,10 @@ public class QuickCapture : MonoBehaviour
         //Checks if the technique name is a valid one
         if (Move_name.text.LastIndexOfAny(Path.GetInvalidFileNameChars()) >= 0 && !Move_name.text.Equals(string.Empty))
             return false;
-#if UNITY_EDITOR        movement_path = Path.Combine(Application.dataPath + target_folder, Move_name.text + ".txt");
+#if UNITY_EDITOR        movement_path = Path.Combine(Application.dataPath + target_folder, Move_name.text + ".dat");
 
 
-#elif UNITY_IOS        movement_path = Path.Combine(Application.persistentDataPath + target_folder, Move_name.text + ".txt");
+#elif UNITY_IOS        movement_path = Path.Combine(Application.persistentDataPath + target_folder, Move_name.text + ".dat");
 #endif
         return true;
     }
