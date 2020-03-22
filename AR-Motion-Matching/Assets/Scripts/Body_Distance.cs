@@ -30,12 +30,12 @@ public class Body_Distance : MonoBehaviour
     //distance of the full body.
     float dis_FullBody;
 
-    Distance dist;
+    //Distance dist;
 
     // Start is called before the first frame update
     void Start()
     {
-        dist = gameObject.GetComponent<Distance>();
+        //dist = gameObject.GetComponent<Distance>();
         
         dis_Head = 0;
         dis_Neck = 0;
@@ -71,72 +71,72 @@ public class Body_Distance : MonoBehaviour
                 {
                     case JointIndices3D.Head:
                         {
-                            dis_Head = dist.object_norm_calc(item.Value, item.Value);
+                            //dis_Head = dist.object_norm_calc(item.Value, item.Value);
                             break;
                         }
                     case JointIndices3D.Neck1:
                         {
-                            dis_Neck = dist.object_norm_calc(item.Value, item.Value);
+                            //dis_Neck = dist.object_norm_calc(item.Value, item.Value);
                             break;
                         }
                     case JointIndices3D.LeftArm:
                         {
-                            dis_LeftArm = dist.object_norm_calc(item.Value, item.Value);
+                            //dis_LeftArm = dist.object_norm_calc(item.Value, item.Value);
                             break;
                         }
                     case JointIndices3D.RightArm:
                         {
-                            dis_Head = dist.object_norm_calc(item.Value, item.Value);
+                            //dis_Head = dist.object_norm_calc(item.Value, item.Value);
                             break;
                         }
                     case JointIndices3D.LeftForearm:
                         {
-                            dis_LeftForearm = dist.object_norm_calc(item.Value, item.Value);
+                            //dis_LeftForearm = dist.object_norm_calc(item.Value, item.Value);
                             break;
                         }
                     case JointIndices3D.RightForearm:
                         {
-                            dis_RightForearm = dist.object_norm_calc(item.Value, item.Value);
+                            //dis_RightForearm = dist.object_norm_calc(item.Value, item.Value);
                             break;
                         }
                     case JointIndices3D.LeftHand:
                         {
-                            dis_LeftHand = dist.object_norm_calc(item.Value, item.Value);
+                            //dis_LeftHand = dist.object_norm_calc(item.Value, item.Value);
                             break;
                         }
                     case JointIndices3D.RightHand:
                         {
-                            dis_RightHand = dist.object_norm_calc(item.Value, item.Value);
+                            //dis_RightHand = dist.object_norm_calc(item.Value, item.Value);
                             break;
                         }
                     case JointIndices3D.LeftUpLeg:
                         {
-                            dis_LeftUpLeg = dist.object_norm_calc(item.Value, item.Value);
+                            //dis_LeftUpLeg = dist.object_norm_calc(item.Value, item.Value);
                             break;
                         }
                     case JointIndices3D.RightUpLeg:
                         {
-                            dis_RightUpLeg = dist.object_norm_calc(item.Value, item.Value);
+                            //dis_RightUpLeg = dist.object_norm_calc(item.Value, item.Value);
                             break;
                         }
                     case JointIndices3D.LeftLeg:
                         {
-                            dis_LeftLeg = dist.object_norm_calc(item.Value, item.Value);
+                            //dis_LeftLeg = dist.object_norm_calc(item.Value, item.Value);
                             break;
                         }
                     case JointIndices3D.RightLeg:
                         {
-                            dis_RightLeg = dist.object_norm_calc(item.Value, item.Value);
+                            //dis_RightLeg = dist.object_norm_calc(item.Value, item.Value);
                             break;
                         }
                     case JointIndices3D.LeftFoot:
                         {
-                            dis_LeftFoot = dist.object_norm_calc(item.Value, item.Value);
+                            //dis_LeftFoot = dist.object_norm_calc(item.Value, item.Value);
                             break;
                         }
                     case JointIndices3D.RightFoot:
                         {
-                            dis_RightFoot = dist.object_norm_calc(item.Value, item.Value);
+                            //dis_RightFoot = dist.object_norm_calc(item.Value, item.Value);
                             break;
                         }
                     default: break;
