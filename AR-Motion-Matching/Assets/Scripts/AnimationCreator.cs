@@ -69,7 +69,7 @@ public class AnimationCreator : MonoBehaviour
         if (start)
         {
             if (file_name.text.Equals("")) file_name.text = "test";
-            AssetDatabase.CreateAsset(clip, "Assets/TargetMotionDB/" + file_name.text + ".anim");
+            //AssetDatabase.CreateAsset(clip, "Assets/TargetMotionDB/" + file_name.text + ".anim");
         }
         start = false;
     }
