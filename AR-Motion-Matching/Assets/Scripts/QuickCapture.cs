@@ -61,11 +61,12 @@ public class QuickCapture : MonoBehaviour
             //Writes the current time
             bf.Serialize(tech_file, time);
             //Create a SerializableVector3 from the bodypart location
-            SerializableVector3 body_holder_pos = new SerializableVector3(BodyPart.Value.position.x, BodyPart.Value.position.y, BodyPart.Value.position.z);
+            SerializableVector3 body_holder_pos = BodyPart.Value.position;
+                
             //Writes the new data into the file
             bf.Serialize(tech_file, body_holder_pos);
             //Create a SerializableQuaternion from the bodypart rotation
-            SerializableQuaternion body_holder_quat = new SerializableQuaternion(BodyPart.Value.rotation.x, BodyPart.Value.rotation.y, BodyPart.Value.rotation.z, BodyPart.Value.rotation.w);
+            SerializableQuaternion body_holder_quat = BodyPart.Value.rotation;
             //Writes the new data into the file
             bf.Serialize(tech_file, body_holder_quat);
         }
@@ -75,7 +76,7 @@ public class QuickCapture : MonoBehaviour
 
     void load_movement()
     {
-        if (File.Exists(movement_path))        {            BinaryFormatter bf = new BinaryFormatter();            FileStream tech_file = File.Open(movement_path, FileMode.Open);            string tech_name = (string)bf.Deserialize(tech_file);            float tech_time = (float)bf.Deserialize(tech_file);            SerializableVector3 tech_vector = (SerializableVector3)bf.Deserialize(tech_file);            SerializableQuaternion tech_rot = (SerializableQuaternion)bf.Deserialize(tech_file);                        tech_file.Close();        }
+        if (File.Exists(movement_path))        {            BinaryFormatter bf = new BinaryFormatter();            FileStream tech_file = File.Open(movement_path, FileMode.Open);            string tech_name = (string)bf.Deserialize(tech_file);            float tech_time = (float)bf.Deserialize(tech_file);            Vector3 tech_vector = (SerializableVector3)bf.Deserialize(tech_file);            Quaternion tech_rot = (SerializableQuaternion)bf.Deserialize(tech_file);                        tech_file.Close();        }
     }
 
     void add_tags()
