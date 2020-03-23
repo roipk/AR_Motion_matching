@@ -42,11 +42,11 @@ public class QuickCapture : MonoBehaviour
         {
             //Debug.Log("in update");
             frames++;
-            Debug.Log(frames);
+            //Debug.Log(frames);
             //Writes to File every 30 frames
             if (frames % 30 == 0)
             {
-                Debug.Log("every frame");
+                //Debug.Log("every frame");
                 if (HumanBodyTracking.Body_flag) {
                     record_movement();
                 }
@@ -120,7 +120,16 @@ public class QuickCapture : MonoBehaviour
 
     void load_movement()
     {
-        if (File.Exists(movement_path))        {            BinaryFormatter bf = new BinaryFormatter();            FileStream tech_file = File.Open(movement_path, FileMode.Open);            string tech_name = (string)bf.Deserialize(tech_file);            float tech_time = (float)bf.Deserialize(tech_file);            Vector3 tech_vector = (SerializableVector3)bf.Deserialize(tech_file);            Quaternion tech_rot = (SerializableQuaternion)bf.Deserialize(tech_file);                        tech_file.Close();        }
+        string path = Application.dataPath + "/tal.dat";
+        Debug.Log(path);
+        if (File.Exists(path))        {            Debug.Log("In log");            BinaryFormatter bf = new BinaryFormatter();            FileStream tech_file = File.Open(path, FileMode.Open);            for (int  i = 0; i < 100; i++)
+            {
+                var tech_name = bf.Deserialize(tech_file);
+                float tech_time = (float)bf.Deserialize(tech_file);
+                Vector3 tech_vector = (SerializableVector3)bf.Deserialize(tech_file);
+                Quaternion tech_rot = (SerializableQuaternion)bf.Deserialize(tech_file);
+                Debug.Log("body part: " + tech_name + "\ntime: " + tech_time + "\nvector is: " + tech_vector + "\n quat is: " + tech_rot); 
+            }                                                tech_file.Close();        }
     }
 
     void add_tags()
@@ -148,6 +157,7 @@ public class QuickCapture : MonoBehaviour
 
     void Start_record()
     {
+        load_movement();
         if (!recording_state)
         {
             //If the human body wasnt detected, do nothing.
