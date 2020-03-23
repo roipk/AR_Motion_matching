@@ -59,6 +59,23 @@ public class QuickCapture : MonoBehaviour
         
     }
 
+    IEnumerator create_dir()
+    {
+        string dir_path = "";
+#if UNITY_EDITOR
+        dir_path = Application.dataPath + target_folder;
+
+#elif UNITY_IOS
+        dir_path = Application.persistentDataPath + target_folder;
+
+#endif
+        if (!Directory.Exists(dir_path))
+        {
+            Directory.CreateDirectory(dir_path);
+        }
+        yield return new WaitForSeconds(0.5f);
+    }
+
     //Captures the body movements and writes their locations
     void record_movement()
     {
