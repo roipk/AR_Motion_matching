@@ -15,9 +15,9 @@ public class QuickCapture : MonoBehaviour
 {
 
     public Button start_btn;
-    public Button stop_btn;
     public InputField Move_name;
     public Text record_mode;
+    public Text log;
     bool recording_state = false;
     int frames = 0;
     string movement_path = "";
@@ -30,8 +30,9 @@ public class QuickCapture : MonoBehaviour
     void Start()
     {
         clip = new AnimationClip();        clip.legacy = true;
+        record_mode.text = rec_off;
         start_btn.onClick.AddListener(Start_record);
-        stop_btn.onClick.AddListener(Stop_record);
+        
     }
 
     // Update is called once per frame
@@ -39,13 +40,21 @@ public class QuickCapture : MonoBehaviour
     {
         if (recording_state)
         {
+            //Debug.Log("in update");
             frames++;
-            //Writes to JSON every 30 frames
+            Debug.Log(frames);
+            //Writes to File every 30 frames
             if (frames % 30 == 0)
             {
-                record_movement();
+                Debug.Log("every frame");
+                if (HumanBodyTracking.Body_flag) {
+                    record_movement();
+                }
+                
+                frames = 0;
             }
-            frames = 0;
+            //If frames dont get reset, reset them to prevent higher numbers.
+            if (frames % 100 == 0) frames = 0;
         }
         
     }
@@ -53,25 +62,43 @@ public class QuickCapture : MonoBehaviour
     //Captures the body movements and writes their locations
     void record_movement()
     {
-        BinaryFormatter bf = new BinaryFormatter();        FileStream tech_file = File.Create(movement_path);
+        if (!File.Exists(movement_path))
+        {
+            FileStream tech_file = File.Create(movement_path);
+            write_body_part(tech_file);
+            
+            tech_file.Close();
+         
+        }
+        else if (File.Exists(movement_path))
+        {
+            
+            FileStream tech_file = File.Open(movement_path, FileMode.Append);
+            write_body_part(tech_file);
+
+            tech_file.Close();
+        }
+        
+    }
+
+    void write_body_part(FileStream fs)
+    {
+        BinaryFormatter bf = new BinaryFormatter();
         foreach (KeyValuePair<JointIndices3D, Transform> BodyPart in HumanBodyTracking.bodyJoints)
         {
             //Writes the name of the body part
-            bf.Serialize(tech_file, BodyPart.Key);
+            bf.Serialize(fs, BodyPart.Key);
             //Writes the current time
-            bf.Serialize(tech_file, time);
+            bf.Serialize(fs, time);
             //Create a SerializableVector3 from the bodypart location
-            SerializableVector3 body_holder_pos = BodyPart.Value.position;
-                
             //Writes the new data into the file
-            bf.Serialize(tech_file, body_holder_pos);
+            bf.Serialize(fs, (SerializableVector3)BodyPart.Value.position);
             //Create a SerializableQuaternion from the bodypart rotation
-            SerializableQuaternion body_holder_quat = BodyPart.Value.rotation;
             //Writes the new data into the file
-            bf.Serialize(tech_file, body_holder_quat);
+            bf.Serialize(fs, (SerializableQuaternion)BodyPart.Value.rotation);
         }
         time += Time.deltaTime;
-        tech_file.Close();
+
     }
 
     void load_movement()
@@ -92,6 +119,7 @@ public class QuickCapture : MonoBehaviour
         //Checks if the technique name is a valid one
         if (Move_name.text.LastIndexOfAny(Path.GetInvalidFileNameChars()) >= 0 && !Move_name.text.Equals(string.Empty))
             return false;
+
 #if UNITY_EDITOR        movement_path = Path.Combine(Application.dataPath + target_folder, Move_name.text + ".dat");
 
 
@@ -103,42 +131,50 @@ public class QuickCapture : MonoBehaviour
 
     void Start_record()
     {
-        //If the human body wasnt detected, do nothing.
-        if (!HumanBodyTracking.Body_flag)
+        if (!recording_state)
         {
-            Debug.LogWarning("Human Body not detected.");
-            return;
+            //If the human body wasnt detected, do nothing.
+            if (!HumanBodyTracking.Body_flag)
+            {
+                Debug.LogWarning("Human Body not detected.");
+                log.text += "\nHuman Body not detected.";
+                //return;
+            }
+            //If a invalid name was entered, do nothing.
+            if (!get_device_path())
+            {
+                Debug.Log("movement name not valid.");
+                log.text += "\nfile name is invalid.";
+                return;
+            }
+            if (File.Exists(movement_path))
+            {
+                Debug.LogWarning("Path already exists.");
+                log.text += "File name already in use";
+                return;
+            }
+            start_btn.GetComponentInChildren<Text>().text = "Stop";
+            recording_state = true;
+            record_mode.color = Color.green;
+            record_mode.text = rec_on;
+
         }
-        //If a invalid name was entered, do nothing.
-        if (!get_device_path())
+        else if (recording_state)
         {
-            Debug.Log("movement name not valid.");
-            return;
+            start_btn.GetComponentInChildren<Text>().text = "Start";
+            recording_state = false;
+            record_mode.color = Color.red;
+            record_mode.text = rec_off;
         }
-        recording_state = true;
-        record_mode.text = rec_on;
 
     }
 
-    void Stop_record()
+    void File_check(string path)
     {
-        recording_state = false;
-        record_mode.text = rec_off;
+        
     }
 
-    [SerializeField]
-    public class BodyJson
-    {
-        public string name;
-        public float time;
-        public Vector3 position;
-        public Quaternion rotation;
-        public BodyJson(string newName, float t, Vector3 pos, Quaternion rot)
-        {
-            time = t;
-            position = pos;
-            rotation = rot;
-            name = newName;
-        }
-    }
+
+    
+    
 }
