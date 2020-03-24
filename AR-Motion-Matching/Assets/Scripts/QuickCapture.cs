@@ -25,11 +25,13 @@ public class QuickCapture : MonoBehaviour
     string rec_on = "Recording", rec_off = "Not Recording";
     float time = 0.0f;
     Animation anim;    AnimationClip clip;
+    List<BodySegment> bp_list;
 
     // Start is called before the first frame update
     void Start()
     {
         clip = new AnimationClip();        clip.legacy = true;
+        bp_list = new List<BodySegment>();
         record_mode.text = rec_off;
         start_btn.onClick.AddListener(Start_record);
         
@@ -103,16 +105,17 @@ public class QuickCapture : MonoBehaviour
         BinaryFormatter bf = new BinaryFormatter();
         foreach (KeyValuePair<JointIndices3D, Transform> BodyPart in HumanBodyTracking.bodyJoints)
         {
+            bp_list.Add(new BodySegment(BodyPart.Key.ToString(), time, (SerializableVector3)BodyPart.Value.position, (SerializableQuaternion)BodyPart.Value.rotation));
             //Writes the name of the body part
-            bf.Serialize(fs, BodyPart.Key);
+            //bf.Serialize(fs, BodyPart.Key);
             //Writes the current time
-            bf.Serialize(fs, time);
+           // bf.Serialize(fs, time);
             //Create a SerializableVector3 from the bodypart location
             //Writes the new data into the file
-            bf.Serialize(fs, (SerializableVector3)BodyPart.Value.position);
+            //bf.Serialize(fs, (SerializableVector3)BodyPart.Value.position);
             //Create a SerializableQuaternion from the bodypart rotation
             //Writes the new data into the file
-            bf.Serialize(fs, (SerializableQuaternion)BodyPart.Value.rotation);
+            //bf.Serialize(fs, (SerializableQuaternion)BodyPart.Value.rotation);
         }
         time += Time.deltaTime;
 
@@ -122,14 +125,17 @@ public class QuickCapture : MonoBehaviour
     {
         string path = Application.dataPath + "/tal.dat";
         Debug.Log(path);
-        if (File.Exists(path))        {            Debug.Log("In log");            BinaryFormatter bf = new BinaryFormatter();            FileStream tech_file = File.Open(path, FileMode.Open);            for (int  i = 0; i < 100; i++)
+        if (File.Exists(path))        {            Debug.Log("In log");            BinaryFormatter bf = new BinaryFormatter();            FileStream tech_file = File.Open(path, FileMode.Open);            List<BodySegment> out_data = (List<BodySegment>)bf.Deserialize(tech_file);            foreach(BodySegment item in out_data)
             {
-                var tech_name = bf.Deserialize(tech_file);
-                float tech_time = (float)bf.Deserialize(tech_file);
-                Vector3 tech_vector = (SerializableVector3)bf.Deserialize(tech_file);
-                Quaternion tech_rot = (SerializableQuaternion)bf.Deserialize(tech_file);
-                Debug.Log("body part: " + tech_name + "\ntime: " + tech_time + "\nvector is: " + tech_vector + "\n quat is: " + tech_rot); 
-            }                                                tech_file.Close();        }
+                print(item.ToString());
+            }            //for (int  i = 0; i < 100; i++)
+            //{
+               // var tech_name = bf.Deserialize(tech_file);
+               // float tech_time = (float)bf.Deserialize(tech_file);
+              //  Vector3 tech_vector = (SerializableVector3)bf.Deserialize(tech_file);
+               // Quaternion tech_rot = (SerializableQuaternion)bf.Deserialize(tech_file);
+              //  Debug.Log("body part: " + tech_name + "\ntime: " + tech_time + "\nvector is: " + tech_vector + "\n quat is: " + tech_rot); 
+           // }                                                tech_file.Close();        }
     }
 
     void add_tags()
@@ -196,10 +202,9 @@ public class QuickCapture : MonoBehaviour
 
     }
 
-    void File_check(string path)
-    {
-        
-    }
+  
+
+    
 
 
     
