@@ -165,6 +165,7 @@ public class QuickCapture : MonoBehaviour
 
     void Start_record()
     {
+        create_dir();
         load_movement();
         if (!recording_state)
         {
