@@ -26,6 +26,7 @@ public class QuickCapture : MonoBehaviour
     float time = 0.0f;
     Animation anim;    AnimationClip clip;
     List<BodySegment> bp_list;
+    float frame_rate = 16;
 
     // Start is called before the first frame update
     void Start()
@@ -46,7 +47,7 @@ public class QuickCapture : MonoBehaviour
             frames++;
             //Debug.Log(frames);
             //Writes to File every 30 frames
-            if (frames % 30 == 0)
+            if (frames % frame_rate == 0)
             {
                 //Debug.Log("every frame");
                 if (HumanBodyTracking.Body_flag) {
@@ -56,7 +57,7 @@ public class QuickCapture : MonoBehaviour
                 frames = 0;
             }
             //If frames dont get reset, reset them to prevent higher numbers.
-            if (frames % 100 == 0) frames = 0;
+            if (frames > frame_rate) frames = 0;
         }
         
     }
@@ -105,7 +106,7 @@ public class QuickCapture : MonoBehaviour
         BinaryFormatter bf = new BinaryFormatter();
         foreach (KeyValuePair<JointIndices3D, Transform> BodyPart in HumanBodyTracking.bodyJoints)
         {
-            bp_list.Add(new BodySegment(BodyPart.Key.ToString(), time, (SerializableVector3)BodyPart.Value.position, (SerializableQuaternion)BodyPart.Value.rotation));
+            bp_list.Add(new BodySegment(BodyPart.Key.ToString(), time, BodyPart.Value.position, BodyPart.Value.rotation));
             //Writes the name of the body part
             //bf.Serialize(fs, BodyPart.Key);
             //Writes the current time
@@ -117,6 +118,7 @@ public class QuickCapture : MonoBehaviour
             //Writes the new data into the file
             //bf.Serialize(fs, (SerializableQuaternion)BodyPart.Value.rotation);
         }
+        bf.Serialize(fs, bp_list);
         time += Time.deltaTime;
 
     }
