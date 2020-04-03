@@ -125,9 +125,9 @@ public class QuickCapture : MonoBehaviour
 
     void load_movement()
     {
-        string path = Application.dataPath + "/tal.dat";
+        string path = Application.dataPath + "/Roi.dat";
         Debug.Log(path);
-        if (File.Exists(path))        {            Debug.Log("In log");            BinaryFormatter bf = new BinaryFormatter();            FileStream tech_file = File.Open(path, FileMode.Open);            List<BodySegment> out_data = (List<BodySegment>)bf.Deserialize(tech_file);            foreach(BodySegment item in out_data)
+        if (File.Exists(path))        {            Debug.Log("In log");            BinaryFormatter bf = new BinaryFormatter();            FileStream tech_file = File.Open(path, FileMode.Open);            List<BodySegment> out_data = (List<BodySegment>)bf.Deserialize(tech_file);            print("list count is: " +out_data.Count);            foreach(BodySegment item in out_data)
             {
                 print(item.ToString());
             }            //for (int  i = 0; i < 100; i++)
