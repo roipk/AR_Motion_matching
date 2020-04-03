@@ -18,6 +18,7 @@ public class QuickCapture : MonoBehaviour
     public InputField Move_name;
     public Text record_mode;
     public Text log;
+    QuickCompare qc;
     bool recording_state = false;
     int frames = 0;
     string movement_path = "";
@@ -26,7 +27,8 @@ public class QuickCapture : MonoBehaviour
     float time = 0.0f;
     Animation anim;    AnimationClip clip;
     List<BodySegment> bp_list;
-    float frame_rate = 16;
+    List<BodySegment> skele_data = new List<BodySegment>();
+    float frame_rate = 5;
 
     // Start is called before the first frame update
     void Start()
