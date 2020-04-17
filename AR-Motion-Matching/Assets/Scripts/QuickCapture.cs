@@ -18,7 +18,7 @@ public class QuickCapture : MonoBehaviour
     public InputField Move_name;
     public Text record_mode;
     public Text log;
-    QuickCompare qc;
+    
     bool recording_state = false;
     int frames = 0;
     string movement_path = "";
