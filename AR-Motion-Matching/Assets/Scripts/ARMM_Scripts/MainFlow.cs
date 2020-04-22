@@ -14,6 +14,7 @@ public class MainFlow : MonoBehaviour
     Load_Movement user_move;
     Load_Movement tech_move;
     AudioSource start_sound;
+    float Start_frame_index;
     bool started_recording = false;
     bool Recording_flag = false;
     int frames_count = 0;
@@ -28,6 +29,7 @@ public class MainFlow : MonoBehaviour
         user_move = GameObject.Find("Data_Loader").GetComponent<Load_Movement>();
         user_move = GameObject.Find("Tech_Loader").GetComponent<Load_Movement>();
         start_sound = GameObject.Find("Start_sound").GetComponent<AudioSource>();
+        Start_frame_index = -1;
         
     }
 
@@ -55,22 +57,26 @@ public class MainFlow : MonoBehaviour
         
     }
 
-    public void call_stop_recording()
-    {
-        StartCoroutine(stop_recording());
-    }
-
-    IEnumerator stop_recording()
+    public void stop_recording()
     {
         Recording_flag = true;
-        StartCoroutine(user_move.Load_data(cap_user.user_file_location));
-        StartCoroutine(tech_move.Load_data("tech location tbd"));
-        while (user_move.Loaded_movement.Count < user_move.Frame_List.Count && tech_move.Loaded_movement.Count < tech_move.Frame_List.Count) {
-            yield return new WaitForSeconds(0.1f);
-        }
-        
+        StartCoroutine(Load_movements());
+
 
     }
+
+    IEnumerator Load_movements() {
+        StartCoroutine(user_move.Load_data(cap_user.user_file_location));
+        StartCoroutine(tech_move.Load_data("tech location tbd"));
+        while (user_move.Loaded_movement.Count < user_move.Frame_List.Count && tech_move.Loaded_movement.Count < tech_move.Frame_List.Count)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+
+
+
 
    
 
