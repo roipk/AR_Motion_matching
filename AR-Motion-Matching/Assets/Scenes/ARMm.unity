@@ -967,6 +967,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3ff69ff6b6364f50b662b621146945a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Frame_List: []
 --- !u!1 &665033224
 GameObject:
   m_ObjectHideFlags: 0
@@ -2124,7 +2125,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1395008825}
-        m_MethodName: call_stop_recording
+        m_MethodName: stop_recording
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2264,6 +2265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3ff69ff6b6364f50b662b621146945a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Frame_List: []
 --- !u!1 &1959473036
 GameObject:
   m_ObjectHideFlags: 0
@@ -2324,7 +2326,7 @@ GameObject:
   - component: {fileID: 2019951460}
   - component: {fileID: 2019951459}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: Score_panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

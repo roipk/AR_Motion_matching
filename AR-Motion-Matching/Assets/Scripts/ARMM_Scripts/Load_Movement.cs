@@ -8,7 +8,7 @@ public class Load_Movement : MonoBehaviour
 {
 
     public List<List<BodySegment>> Loaded_movement;
-    List<BodySegment> Frame_List;
+    public List<BodySegment> Frame_List;
     HumanBodyData BodyData;
   
     // Start is called before the first frame update

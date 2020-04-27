@@ -19,7 +19,8 @@ public class MainFlow : MonoBehaviour
     bool Recording_flag = false;
     int frames_count = 0;
     float frame_rate = 1;
-    
+    int corr_index = -1;
+    float object_norm_score = -1;
     // Start is called before the first frame update
     void Start()
     {
@@ -65,6 +66,7 @@ public class MainFlow : MonoBehaviour
 
     }
 
+    //Once the movements has stopped, load the two movements
     IEnumerator Load_movements() {
         StartCoroutine(user_move.Load_data(cap_user.user_file_location));
         StartCoroutine(tech_move.Load_data("tech location tbd"));
@@ -72,8 +74,13 @@ public class MainFlow : MonoBehaviour
         {
             yield return new WaitForSeconds(0.1f);
         }
+
     }
 
+    void final_score()
+    {
+
+    }
 
 
 
