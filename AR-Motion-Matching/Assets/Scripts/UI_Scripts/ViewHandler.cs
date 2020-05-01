@@ -1,4 +1,4 @@
-﻿/*************
+﻿    /*************
  *This class handles the main UI components.
  *The basic flow of the UI will run from here.
  *
@@ -28,6 +28,7 @@ public class ViewHandler : MonoBehaviour
     bool InCate = false;
     bool InMain = true;
     bool InTech = false;
+    string cate_path = "/Resources/Category/";
 
     List<GameObject> cate_item_holder;
 
@@ -112,16 +113,16 @@ public class ViewHandler : MonoBehaviour
         path_way = Application.persistentDataPath;
 #endif
 
-        Cate_list_takwando.Add(new KeyValuePair<string, string>("Kick Techniques", path_way + "/Resources/Category/cate_kick.png"));
-        Cate_list_takwando.Add(new KeyValuePair<string, string>("Hand Techniques", path_way + "/Resources/Category/cate_punch.png"));
-        Cate_list_takwando.Add(new KeyValuePair<string, string>("Stances", path_way + "/Resources/Category/cate_stance.png"));
-        Cate_list_takwando.Add(new KeyValuePair<string, string>("Combinations Techniques", path_way + "/Resources/Category/cate_combination.png"));
-        Cate_list_takwando.Add(new KeyValuePair<string, string>("Poomase", path_way + "/Resources/Category/cate_poomase.png"));
+        Cate_list_takwando.Add(new KeyValuePair<string, string>("Kick Techniques", path_way + cate_path + "cate_kick.png"));
+        Cate_list_takwando.Add(new KeyValuePair<string, string>("Hand Techniques", path_way + cate_path + "cate_punch.png"));
+        Cate_list_takwando.Add(new KeyValuePair<string, string>("Stances", path_way + cate_path + "cate_stance.png"));
+        Cate_list_takwando.Add(new KeyValuePair<string, string>("Combinations Techniques", path_way + cate_path + "cate_combination.png"));
+        Cate_list_takwando.Add(new KeyValuePair<string, string>("Poomase", path_way + cate_path + "cate_poomase.png"));
 
-        Cate_list_karate.Add(new KeyValuePair<string, string>("Kick Techniques", path_way + "/Resources/Category/cate_kick.png"));
-        Cate_list_karate.Add(new KeyValuePair<string, string>("Hand Techniques", path_way + "/Resources/Category/cate_punch.png"));
-        Cate_list_karate.Add(new KeyValuePair<string, string>("Stances", path_way + "/Resources/Category/cate_stance.png"));
-        Cate_list_karate.Add(new KeyValuePair<string, string>("Combinations Techniques", path_way + "/Resources/Category/cate_combination.png"));
+        Cate_list_karate.Add(new KeyValuePair<string, string>("Kick Techniques", path_way + cate_path + "cate_kick.png"));
+        Cate_list_karate.Add(new KeyValuePair<string, string>("Hand Techniques", path_way + cate_path + "cate_punch.png"));
+        Cate_list_karate.Add(new KeyValuePair<string, string>("Stances", path_way + cate_path + "cate_stance.png"));
+        Cate_list_karate.Add(new KeyValuePair<string, string>("Combinations Techniques", path_way + cate_path + "cate_combination.png"));
         Cate_list_karate.Add(new KeyValuePair<string, string>("Kata", path_way + "/Resources/Category/cate_kata.png"));
     }
 
@@ -151,6 +152,7 @@ public class ViewHandler : MonoBehaviour
         }
     }
 
+    //Fills the category scroll view with cate buttons
     private void FillScrollView()
     {
         if(content_tech == null || content_cate == null)
