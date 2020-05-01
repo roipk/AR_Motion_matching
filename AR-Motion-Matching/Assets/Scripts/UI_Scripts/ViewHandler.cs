@@ -203,6 +203,8 @@ public class ViewHandler : MonoBehaviour
     void Selected_category()
     {
         tech_folder = path_way + tech_path + ((EventSystem.current.currentSelectedGameObject.GetComponentInParent<Transform>()).parent.name);
+        FillTechScrollView();
+        ChangeView();
     }
 
     private void FillTechScrollView()
@@ -225,8 +227,8 @@ public class ViewHandler : MonoBehaviour
         {
             tech_item = Instantiate(tech_btn);
             tech_item.transform.SetParent(content_tech.transform);
-            tech_item.transform.GetChild(0).transform.GetChild(0).GetComponent<Text>().text = item.Name;
-            tech_item.transform.name = item.Name;
+            tech_item.transform.GetChild(0).transform.GetChild(0).GetComponent<Text>().text = Path.GetFileNameWithoutExtension(item.Name);
+            tech_item.transform.name = Path.GetFileNameWithoutExtension(item.Name);
             tech_item.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(load_selected_tech);
         }
     }
@@ -235,6 +237,7 @@ public class ViewHandler : MonoBehaviour
     {
         selected_technique.selected_tech_path = Path.Combine(tech_folder, (EventSystem.current.currentSelectedGameObject.GetComponentInParent<Transform>()).parent.name);
         Debug.Log("technqiue chosen is: " + selected_technique.selected_tech_path);
+        loadARMm();
     }
 
     private Sprite Cate_image_filler(string path)
@@ -254,65 +257,70 @@ public class ViewHandler : MonoBehaviour
         animator.ResetTrigger("CateMain");
     }
 
-    private void Cate_JSON_maker()
-    {
-        if (File.Exists("/Data_Files/Cate_main"))
-        {
-            return;
-        }
-
-        //File.Create("/Data_Files/Cate_main");
-        Cate_main test = new Cate_main();
-        cate_name cate_list = new cate_name("basic");
-        cate_list.tech_list = new List<tech_item>();
-        test.cate_list = new List<cate_name>();
-        tech_item punch = new tech_item("punch");
-        tech_item kick = new tech_item("kick");
-        
-
-        cate_list.tech_list.Add(punch);
-        Debug.Log(cate_list.tech_list[0].tech_name);
-        cate_list.tech_list.Add(kick);
-        Debug.Log(cate_list.tech_list[1].tech_name);
-
-        test.cate_list.Add(cate_list);
-        Debug.Log(test.cate_list[0].tech_list[0].tech_name);
-        string s = JsonUtility.ToJson(test);
-        Debug.Log(s);
-        Cate_main main_2 = JsonUtility.FromJson<Cate_main>(s);
-        Debug.Log(main_2.cate_list[0].tech_list[0].tech_name);
-
-
-    }
-    [Serializable]
-    public class Cate_main
-    {
-        public List<cate_name> cate_list; 
-    }
-    [Serializable]
-    public class cate_name
-    {
-        public string cate_title;
-        public List<tech_item> tech_list;
-        public cate_name(string name)
-        {
-            cate_title = name;
-        }
-    }
-    [Serializable]
-    public class tech_item
-    {
-        public string tech_name;
-        public tech_item (string tech)
-        {
-            tech_name = tech;
-        }
-    }
-
     public void loadARMm()
     {
         SceneManager.LoadScene("ARMm", LoadSceneMode.Single);
     }
+
+
+
+
+    /*  private void Cate_JSON_maker()
+      {
+          if (File.Exists("/Data_Files/Cate_main"))
+          {
+              return;
+          }
+
+          //File.Create("/Data_Files/Cate_main");
+          Cate_main test = new Cate_main();
+          cate_name cate_list = new cate_name("basic");
+          cate_list.tech_list = new List<tech_item>();
+          test.cate_list = new List<cate_name>();
+          tech_item punch = new tech_item("punch");
+          tech_item kick = new tech_item("kick");
+
+
+          cate_list.tech_list.Add(punch);
+          Debug.Log(cate_list.tech_list[0].tech_name);
+          cate_list.tech_list.Add(kick);
+          Debug.Log(cate_list.tech_list[1].tech_name);
+
+          test.cate_list.Add(cate_list);
+          Debug.Log(test.cate_list[0].tech_list[0].tech_name);
+          string s = JsonUtility.ToJson(test);
+          Debug.Log(s);
+          Cate_main main_2 = JsonUtility.FromJson<Cate_main>(s);
+          Debug.Log(main_2.cate_list[0].tech_list[0].tech_name);
+
+
+      }
+      [Serializable]
+      public class Cate_main
+      {
+          public List<cate_name> cate_list; 
+      }
+      [Serializable]
+      public class cate_name
+      {
+          public string cate_title;
+          public List<tech_item> tech_list;
+          public cate_name(string name)
+          {
+              cate_title = name;
+          }
+      }
+      [Serializable]
+      public class tech_item
+      {
+          public string tech_name;
+          public tech_item (string tech)
+          {
+              tech_name = tech;
+          }
+      }
+      */
+
 
 
 }
