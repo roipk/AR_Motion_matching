@@ -1,7 +1,7 @@
 ﻿    /*************
  *This class handles the main UI components.
  *The basic flow of the UI will run from here.
- *
+ *Sends to ARMm the path to the selected technique
  *
  * ***********/
 
@@ -12,6 +12,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class ViewHandler : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class ViewHandler : MonoBehaviour
     public GameObject cath_btn;
     public GameObject tech_btn;
     GameObject content_cate, content_tech;
+    Tech_name selected_technique;
     Animator animator;
     Button exit_button;
     List<KeyValuePair<string, string>> Cate_list;
@@ -29,21 +31,29 @@ public class ViewHandler : MonoBehaviour
     bool InMain = true;
     bool InTech = false;
     string cate_path = "/Resources/Category/";
+    string tech_path = "/MotionsDB/";
+    string path_way;
+    public string tech_folder;
+    List<string> Martial_List;
 
     List<GameObject> cate_item_holder;
 
     // Start is called before the first frame update
     void Start()
     {
+        Martial_List = new List<string>();
+        
         animator = Animator.GetComponent<Animator>();
         content_cate = GameObject.Find("Content_Cate");
         content_tech = GameObject.Find("Content_Tech");
+        selected_technique = GameObject.Find("Selected_tech").GetComponent<Tech_name>();
         Cate_list = new List<KeyValuePair<string, string>>();
         Cate_list_karate = new List<KeyValuePair<string, string>>();
         Cate_list_takwando = new List<KeyValuePair<string, string>>();
         cate_item_holder = new List<GameObject>();
         create_cate_list();
         Cate_JSON_maker();
+        set_marital_list();
     }
 
     // Update is called once per frame
@@ -79,6 +89,14 @@ public class ViewHandler : MonoBehaviour
 
         }
     }
+
+    void set_marital_list()
+    {
+        Martial_List.Add("null");
+        Martial_List.Add("Takwando");
+        Martial_List.Add("Karate");
+    }
+
     public void ExitApp()
     {
         Application.Quit();
@@ -86,12 +104,15 @@ public class ViewHandler : MonoBehaviour
 
     private void MartialMode(int mode)
     {
+        tech_path += Martial_List[mode] + "/";
         //mode == 1-> takwando
         if (mode == 1)
         {
             Cate_list = Cate_list_takwando;
+            
 
-        }//mode == 2 -> Karate
+        }
+        //mode == 2 -> Karate
         else if(mode == 2)
         {
             Cate_list = Cate_list_karate;
@@ -104,7 +125,7 @@ public class ViewHandler : MonoBehaviour
 
     private void create_cate_list()
     {
-        string path_way;
+        
 #if UNITY_EDITOR
          path_way = "Assets";
 #elif UNITY_IOS
@@ -113,16 +134,16 @@ public class ViewHandler : MonoBehaviour
         path_way = Application.persistentDataPath;
 #endif
 
-        Cate_list_takwando.Add(new KeyValuePair<string, string>("Kick Techniques", path_way + cate_path + "cate_kick.png"));
-        Cate_list_takwando.Add(new KeyValuePair<string, string>("Hand Techniques", path_way + cate_path + "cate_punch.png"));
+        Cate_list_takwando.Add(new KeyValuePair<string, string>("Kick_Techniques", path_way + cate_path + "cate_kick.png"));
+        Cate_list_takwando.Add(new KeyValuePair<string, string>("Hand_Techniques", path_way + cate_path + "cate_punch.png"));
         Cate_list_takwando.Add(new KeyValuePair<string, string>("Stances", path_way + cate_path + "cate_stance.png"));
-        Cate_list_takwando.Add(new KeyValuePair<string, string>("Combinations Techniques", path_way + cate_path + "cate_combination.png"));
+        Cate_list_takwando.Add(new KeyValuePair<string, string>("Combinations_Techniques", path_way + cate_path + "cate_combination.png"));
         Cate_list_takwando.Add(new KeyValuePair<string, string>("Poomase", path_way + cate_path + "cate_poomase.png"));
 
-        Cate_list_karate.Add(new KeyValuePair<string, string>("Kick Techniques", path_way + cate_path + "cate_kick.png"));
-        Cate_list_karate.Add(new KeyValuePair<string, string>("Hand Techniques", path_way + cate_path + "cate_punch.png"));
+        Cate_list_karate.Add(new KeyValuePair<string, string>("Kick_Techniques", path_way + cate_path + "cate_kick.png"));
+        Cate_list_karate.Add(new KeyValuePair<string, string>("Hand_Techniques", path_way + cate_path + "cate_punch.png"));
         Cate_list_karate.Add(new KeyValuePair<string, string>("Stances", path_way + cate_path + "cate_stance.png"));
-        Cate_list_karate.Add(new KeyValuePair<string, string>("Combinations Techniques", path_way + cate_path + "cate_combination.png"));
+        Cate_list_karate.Add(new KeyValuePair<string, string>("Combinations_Techniques", path_way + cate_path + "cate_combination.png"));
         Cate_list_karate.Add(new KeyValuePair<string, string>("Kata", path_way + "/Resources/Category/cate_kata.png"));
     }
 
@@ -172,16 +193,48 @@ public class ViewHandler : MonoBehaviour
             //Finds the image component and change its image
             cate_item.transform.GetChild(0).transform.GetChild(1).GetComponent<Image>().sprite = Cate_image_filler(item.Value);
             //Changes the name of the object
-            cate_item.transform.name = "cate_" + item.Key;
+            cate_item.transform.name = item.Key;
             //Adds an onclick listener 
-            cate_item.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(test);
+            cate_item.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(Selected_category);
             cate_item_holder.Add(cate_item);
         }
     }
 
-    private void test()
+    void Selected_category()
     {
-        Debug.LogError("test");
+        tech_folder = path_way + tech_path + ((EventSystem.current.currentSelectedGameObject.GetComponentInParent<Transform>()).parent.name);
+    }
+
+    private void FillTechScrollView()
+    {
+        if(tech_folder == null && !Directory.Exists(tech_folder))
+        {
+            Debug.LogError("Tech_Folder is empty or doesnt exists");
+            return;
+            
+        }
+        DirectoryInfo tech_files = new DirectoryInfo(tech_folder);
+        FileInfo[] tech_items = tech_files.GetFiles("*.dat");
+        if(tech_items.Length < 1)
+        {
+            Debug.LogError("No techniques in folder!");
+            return;
+        }
+        GameObject tech_item;
+        foreach(FileInfo item in tech_items)
+        {
+            tech_item = Instantiate(tech_btn);
+            tech_item.transform.SetParent(content_tech.transform);
+            tech_item.transform.GetChild(0).transform.GetChild(0).GetComponent<Text>().text = item.Name;
+            tech_item.transform.name = item.Name;
+            tech_item.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(load_selected_tech);
+        }
+    }
+
+    void load_selected_tech()
+    {
+        selected_technique.selected_tech_path = Path.Combine(tech_folder, (EventSystem.current.currentSelectedGameObject.GetComponentInParent<Transform>()).parent.name);
+        Debug.Log("technqiue chosen is: " + selected_technique.selected_tech_path);
     }
 
     private Sprite Cate_image_filler(string path)
