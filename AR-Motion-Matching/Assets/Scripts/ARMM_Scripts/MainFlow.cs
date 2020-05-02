@@ -14,6 +14,8 @@ public class MainFlow : MonoBehaviour
     Load_Movement user_move;
     Load_Movement tech_move;
     AudioSource start_sound;
+    CompareMovements comp_move;
+    Tech_name technique_name;
     float Start_frame_index;
     bool started_recording = false;
     bool Recording_flag = false;
@@ -30,6 +32,8 @@ public class MainFlow : MonoBehaviour
         user_move = GameObject.Find("Data_Loader").GetComponent<Load_Movement>();
         user_move = GameObject.Find("Tech_Loader").GetComponent<Load_Movement>();
         start_sound = GameObject.Find("Start_sound").GetComponent<AudioSource>();
+        comp_move = GameObject.Find("Compare").GetComponent<CompareMovements>();
+        technique_name = GameObject.Find("Selected_tech").GetComponent<Tech_name>();
         Start_frame_index = -1;
         
     }
@@ -68,18 +72,19 @@ public class MainFlow : MonoBehaviour
 
     //Once the movements has stopped, load the two movements
     IEnumerator Load_movements() {
-        StartCoroutine(user_move.Load_data(cap_user.user_file_location));
-        StartCoroutine(tech_move.Load_data("tech location tbd"));
+        tech_move.Load_data(technique_name.selected_tech_path);
+        user_move.Load_data(cap_user.user_file_location);
+        
         while (user_move.Loaded_movement.Count < user_move.Frame_List.Count && tech_move.Loaded_movement.Count < tech_move.Frame_List.Count)
         {
             yield return new WaitForSeconds(0.1f);
         }
-
+        final_score();
     }
 
     void final_score()
     {
-
+        object_norm_score = comp_move.Cross_correlation(user_move.Loaded_movement, tech_move.Loaded_movement);
     }
 
 

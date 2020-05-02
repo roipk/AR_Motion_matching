@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -20,43 +21,57 @@ public class Load_Movement : MonoBehaviour
     }
 
 
-    public IEnumerator Load_data(string path)
+    public void Load_data(string path)
     {
         if (File.Exists(path))
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream tech_file = File.Open(path, FileMode.Open);
-            while (tech_file.Position != tech_file.Length)            {
-                Frame_List = (List<BodySegment>)bf.Deserialize(tech_file);
-                
-            }
-            yield return new WaitForSeconds(1);
-
-            tech_file.Close();
-
-            int index = 0;
-            if (Frame_List.Count > 0)
+            try
             {
-                for (int i = 0; i < Frame_List.Count / BodyData.body_part_names.Count; i++)
-                {
-                    List<BodySegment> Single_Frame = new List<BodySegment>();
-                    for (int j = 0; j < BodyData.body_part_names.Count; j++)
-                    {
-                        if (index < Frame_List.Count)
-                        {
-                            Single_Frame.Add(Frame_List[index]);
-                            index += 1;
-                        }
+                BinaryFormatter bf = new BinaryFormatter();
+                FileStream tech_file = File.Open(path, FileMode.Open);
+                StartCoroutine(read_file_data(tech_file, bf));
 
+                tech_file.Close();
+
+                int index = 0;
+                if (Frame_List.Count > 0)
+                {
+                    for (int i = 0; i < Frame_List.Count / BodyData.body_part_names.Count; i++)
+                    {
+                        List<BodySegment> Single_Frame = new List<BodySegment>();
+                        for (int j = 0; j < BodyData.body_part_names.Count; j++)
+                        {
+                            if (index < Frame_List.Count)
+                            {
+                                Single_Frame.Add(Frame_List[index]);
+                                index += 1;
+                            }
+
+                        }
+                        Loaded_movement.Add(Single_Frame);
                     }
-                    Loaded_movement.Add(Single_Frame);
                 }
             }
+            catch(Exception e)
+            {
+                Debug.LogError("Error in Load_data: " + e);
+            }
+            
         }
         else
         {
             Debug.LogError("Didnt find path: " + path);
         }
+    }
+
+    IEnumerator read_file_data(FileStream tech_file, BinaryFormatter bf)
+    {
+        while (tech_file.Position != tech_file.Length)
+        {
+            Frame_List = (List<BodySegment>)bf.Deserialize(tech_file);
+
+        }
+        yield return new WaitForSeconds(1);
     }
 
 

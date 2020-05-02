@@ -52,7 +52,7 @@ public class ViewHandler : MonoBehaviour
         Cate_list_takwando = new List<KeyValuePair<string, string>>();
         cate_item_holder = new List<GameObject>();
         create_cate_list();
-        Cate_JSON_maker();
+        //Cate_JSON_maker();
         set_marital_list();
     }
 
