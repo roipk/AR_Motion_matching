@@ -16,6 +16,7 @@ public class MainFlow : MonoBehaviour
     AudioSource start_sound;
     CompareMovements comp_move;
     Tech_name technique_name;
+    WheelHandler wheel_hand;
     float Start_frame_index;
     bool started_recording = false;
     bool Recording_flag = false;
@@ -34,6 +35,7 @@ public class MainFlow : MonoBehaviour
         start_sound = GameObject.Find("Start_sound").GetComponent<AudioSource>();
         comp_move = GameObject.Find("Compare").GetComponent<CompareMovements>();
         technique_name = GameObject.Find("Selected_tech").GetComponent<Tech_name>();
+        wheel_hand = GameObject.Find("WheelHandler").GetComponent<WheelHandler>();
         Start_frame_index = -1;
         
     }
@@ -86,6 +88,13 @@ public class MainFlow : MonoBehaviour
     void final_score()
     {
         object_norm_score = comp_move.Cross_correlation(user_move.Loaded_movement, tech_move.Loaded_movement);
+        if(object_norm_score < 0)
+        {
+            Debug.LogError("Failed to perform cross correlation.");
+            return;
+        }
+        wheel_hand.score = object_norm_score;
+        Debug.Log(object_norm_score);
     }
 
 

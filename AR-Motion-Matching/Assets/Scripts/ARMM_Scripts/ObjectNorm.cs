@@ -13,12 +13,17 @@ public class ObjectNorm : MonoBehaviour
         BodyData = GameObject.Find("HumanData").GetComponent<HumanBodyData>();               List<float> object_norm_list = new List<float>();
         //Takes the smallest movement
         int small_movement = alpha.Count;        if (beta.Count < alpha.Count) small_movement = beta.Count;
+        if(small_movement <= 0)
+        {
+            Debug.LogError("small movement is 0 or less.");
+            return -5f;
+        }
         //Calcs the object norm of every frozen move and sums them up
         for (int i = 0; i < small_movement; i++)        {            object_norm_list.Add(CompareFrozenMovement(alpha[i], beta[i]));
         }                if (object_norm_list.Count > 0)        {
             //Debug.Log("Avg obj is: " + object_norm_list.Average());
             //return full_distance;
-            return object_norm_list.Average();        }        Debug.LogError("Failed to compare movements.");        return -5;    }
+            return object_norm_list.Average();        }        Debug.Log("alpha count is: " + alpha.Count + "\nbeta count is " + beta.Count);        Debug.LogError("Failed to compare movements.");        return -5f;    }
 
     //Checks it the movement has any static frames, if it does, return a new movement without it.
     public List<List<BodySegment>> RemoveStaticMovement(List<List<BodySegment>> alpha)    {        int static_index = -1;        int same_frame = 0;        bool static_move = false;

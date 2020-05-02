@@ -7,15 +7,22 @@
     public float Cross_correlation(List<List<BodySegment>> alpha, List<List<BodySegment>> beta)    {        int small_count = alpha.Count;        bool alpha_small = true;        int start_index = 2, mult_index = 1, moved_index = start_index * mult_index; ;        List<float> distance_list = new List<float>();
 
 
-        if (beta.Count < alpha.Count)        {            small_count = beta.Count;            alpha_small = false;        }        distance_list.Add(obj_norm.CompareFullMovement(alpha, beta));        while (moved_index + 1 < small_count)        {
+        if (beta.Count < alpha.Count)        {            small_count = beta.Count;            alpha_small = false;        }        distance_list.Add(obj_norm.CompareFullMovement(alpha, beta));        float current_score = 0f;        while (moved_index + 1 < small_count)        {
 
-            moved_index = start_index * mult_index;            if (alpha_small)                distance_list.Add(obj_norm.CompareFullMovement(alpha, beta.GetRange(moved_index, beta.Count - moved_index)));            else if (!alpha_small)                distance_list.Add(obj_norm.CompareFullMovement(alpha.GetRange(moved_index, alpha.Count - moved_index), beta));            Debug.Log("hey");            mult_index += 1;        }
+            moved_index = start_index * mult_index;            if (alpha_small)                current_score = obj_norm.CompareFullMovement(alpha, beta.GetRange(moved_index, beta.Count - moved_index));
+
+            else if (!alpha_small)                current_score = obj_norm.CompareFullMovement(alpha.GetRange(moved_index, alpha.Count - moved_index), beta);            if(current_score >= 0)
+            {
+                distance_list.Add(current_score);
+            }                                    mult_index += 1;        }
+
         //for (int i = 0; i < distance_list.Count; i++)
         //{
         //  Debug.Log("list is: " + distance_list[i]);
         //}
         //Debug.Log("cross is: " + distance_list.IndexOf(distance_list.Min()) * start_index);
         //return distance_list.IndexOf(distance_list.Min()) * start_index;
+        
         if(distance_list.Count >0)
             return distance_list.Min();        return -7;    }
 
