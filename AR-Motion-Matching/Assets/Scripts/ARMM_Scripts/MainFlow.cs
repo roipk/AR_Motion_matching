@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainFlow : MonoBehaviour
 {
+
+    public Text move_name;
 
     HumanBodyData BodyData;
     ObjectNorm obj_norm;
@@ -76,7 +79,7 @@ public class MainFlow : MonoBehaviour
     //Once the movements has stopped, load the two movements
     void Load_movements() {
         tech_move.Load_data(technique_name.selected_tech_path + ".dat");
-        user_move.Load_data(technique_name.selected_tech_path + ".dat");
+        user_move.Load_data(cap_user.user_file_location);
         
        // while (user_move.Loaded_movement.Count < user_move.Frame_List.Count && tech_move.Loaded_movement.Count < tech_move.Frame_List.Count)
         //{
@@ -93,10 +96,26 @@ public class MainFlow : MonoBehaviour
             Debug.LogError("Failed to perform cross correlation.");
             return;
         }
+        update_move_name();
         wheel_hand.score = object_norm_score;
         Debug.Log(object_norm_score);
     }
 
+    void update_move_name()
+    {
+        string text = "Comparing your movement to " + technique_name.selected_tech_path;
+        move_name.text = text;
+    }
+
+    public void reload_currentmove()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void Load_MainUI()
+    {
+        SceneManager.LoadScene("MainUI", LoadSceneMode.Single);
+    }
 
 
 
