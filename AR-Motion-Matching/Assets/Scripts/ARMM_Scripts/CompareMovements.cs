@@ -9,14 +9,15 @@
 
         if (beta.Count < alpha.Count)        {            small_count = beta.Count;            alpha_small = false;        }        distance_list.Add(obj_norm.CompareFullMovement(alpha, beta));        while (moved_index + 1 < small_count)        {
 
-            moved_index = start_index * mult_index;            if (alpha_small)                distance_list.Add(obj_norm.CompareFullMovement(alpha, beta.GetRange(moved_index, beta.Count - moved_index)));            else if (!alpha_small)                distance_list.Add(obj_norm.CompareFullMovement(alpha.GetRange(moved_index, alpha.Count - moved_index), beta));            mult_index += 1;        }
+            moved_index = start_index * mult_index;            if (alpha_small)                distance_list.Add(obj_norm.CompareFullMovement(alpha, beta.GetRange(moved_index, beta.Count - moved_index)));            else if (!alpha_small)                distance_list.Add(obj_norm.CompareFullMovement(alpha.GetRange(moved_index, alpha.Count - moved_index), beta));            Debug.Log("hey");            mult_index += 1;        }
         //for (int i = 0; i < distance_list.Count; i++)
         //{
         //  Debug.Log("list is: " + distance_list[i]);
         //}
         //Debug.Log("cross is: " + distance_list.IndexOf(distance_list.Min()) * start_index);
         //return distance_list.IndexOf(distance_list.Min()) * start_index;
-        return distance_list.Min();    }
+        if(distance_list.Count >0)
+            return distance_list.Min();        return -7;    }
 
 
     /******     * INPUT PARAMETERS:     *      alpha - A list of movements - The target motion     *      beta - A list of movements - the users motion     * OUTPUT:     *      The index of the first detected feature.     *     ******/

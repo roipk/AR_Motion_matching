@@ -10,12 +10,12 @@ public class ObjectNorm : MonoBehaviour
         //Debug.Log("body: " + BodyDistance);
         return BodyDistance;    }    public float CompareFullMovement(List<List<BodySegment>> alpha, List<List<BodySegment>> beta)    {
         //Loads the numbers of the human body
-        BodyData = GameObject.Find("HumanData").GetComponent<HumanBodyData>();        List<float> object_norm_list = new List<float>();
+        BodyData = GameObject.Find("HumanData").GetComponent<HumanBodyData>();               List<float> object_norm_list = new List<float>();
         //Takes the smallest movement
         int small_movement = alpha.Count;        if (beta.Count < alpha.Count) small_movement = beta.Count;
         //Calcs the object norm of every frozen move and sums them up
         for (int i = 0; i < small_movement; i++)        {            object_norm_list.Add(CompareFrozenMovement(alpha[i], beta[i]));
-        }        if (object_norm_list.Count > 0)        {
+        }                if (object_norm_list.Count > 0)        {
             //Debug.Log("Avg obj is: " + object_norm_list.Average());
             //return full_distance;
             return object_norm_list.Average();        }        Debug.LogError("Failed to compare movements.");        return -5;    }

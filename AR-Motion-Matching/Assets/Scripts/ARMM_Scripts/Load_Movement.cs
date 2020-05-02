@@ -23,6 +23,7 @@ public class Load_Movement : MonoBehaviour
 
     public void Load_data(string path)
     {
+        
         if (File.Exists(path))
         {
             try
@@ -51,6 +52,7 @@ public class Load_Movement : MonoBehaviour
                         Loaded_movement.Add(Single_Frame);
                     }
                 }
+                
             }
             catch(Exception e)
             {

@@ -30,7 +30,7 @@ public class MainFlow : MonoBehaviour
         obj_norm = GameObject.Find("ObjectNorm").GetComponent<ObjectNorm>();
         cap_user = GameObject.Find("CaptureUser").GetComponent<CaptureUser>();
         user_move = GameObject.Find("Data_Loader").GetComponent<Load_Movement>();
-        user_move = GameObject.Find("Tech_Loader").GetComponent<Load_Movement>();
+        tech_move = GameObject.Find("Tech_Loader").GetComponent<Load_Movement>();
         start_sound = GameObject.Find("Start_sound").GetComponent<AudioSource>();
         comp_move = GameObject.Find("Compare").GetComponent<CompareMovements>();
         technique_name = GameObject.Find("Selected_tech").GetComponent<Tech_name>();
@@ -65,20 +65,21 @@ public class MainFlow : MonoBehaviour
     public void stop_recording()
     {
         Recording_flag = true;
-        StartCoroutine(Load_movements());
+        //StartCoroutine(Load_movements());
+        Load_movements();
 
 
     }
 
     //Once the movements has stopped, load the two movements
-    IEnumerator Load_movements() {
-        tech_move.Load_data(technique_name.selected_tech_path);
-        user_move.Load_data(cap_user.user_file_location);
+    void Load_movements() {
+        tech_move.Load_data(technique_name.selected_tech_path + ".dat");
+        user_move.Load_data(technique_name.selected_tech_path + ".dat");
         
-        while (user_move.Loaded_movement.Count < user_move.Frame_List.Count && tech_move.Loaded_movement.Count < tech_move.Frame_List.Count)
-        {
-            yield return new WaitForSeconds(0.1f);
-        }
+       // while (user_move.Loaded_movement.Count < user_move.Frame_List.Count && tech_move.Loaded_movement.Count < tech_move.Frame_List.Count)
+        //{
+        //    yield return new WaitForSeconds(0.1f);
+       // }
         final_score();
     }
 
