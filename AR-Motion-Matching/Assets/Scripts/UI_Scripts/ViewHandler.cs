@@ -37,7 +37,7 @@ public class ViewHandler : MonoBehaviour
     List<string> Martial_List;
 
     List<GameObject> cate_item_holder;
-
+    List<GameObject> tech_item_holder;
     // Start is called before the first frame update
     void Start()
     {
@@ -51,6 +51,7 @@ public class ViewHandler : MonoBehaviour
         Cate_list_karate = new List<KeyValuePair<string, string>>();
         Cate_list_takwando = new List<KeyValuePair<string, string>>();
         cate_item_holder = new List<GameObject>();
+        tech_item_holder = new List<GameObject>();
         create_cate_list();
         //Cate_JSON_maker();
         set_marital_list();
@@ -82,6 +83,11 @@ public class ViewHandler : MonoBehaviour
             //Try to exit from technique page
             else if (InTech)
             {
+                Cate_list = null;
+                for (int i = 0; i < tech_item_holder.Count; i++)
+                {
+                    Destroy(tech_item_holder[i]);
+                }
                 InTech = false;
                 InCate = true;
                 animator.SetTrigger("TechCate");
@@ -230,6 +236,7 @@ public class ViewHandler : MonoBehaviour
             tech_item.transform.GetChild(0).transform.GetChild(0).GetComponent<Text>().text = Path.GetFileNameWithoutExtension(item.Name);
             tech_item.transform.name = Path.GetFileNameWithoutExtension(item.Name);
             tech_item.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(load_selected_tech);
+            tech_item_holder.Add(tech_item);
         }
     }
 
