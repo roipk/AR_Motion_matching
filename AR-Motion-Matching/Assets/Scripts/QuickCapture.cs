@@ -43,6 +43,7 @@ public class QuickCapture : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (recording_state)
         {
             //Debug.Log("in update");
@@ -168,7 +169,8 @@ public class QuickCapture : MonoBehaviour
     void Start_record()
     {
         create_dir();
-        load_movement();
+        load_movement();        
+        
         if (!recording_state)
         {
             //If the human body wasnt detected, do nothing.
@@ -188,7 +190,7 @@ public class QuickCapture : MonoBehaviour
             if (File.Exists(movement_path))
             {
                 Debug.LogWarning("Path already exists.");
-                log.text += "File name already in use";
+                log.text += "\nFile name already in use";
                 return;
             }
             start_btn.GetComponentInChildren<Text>().text = "Stop";
