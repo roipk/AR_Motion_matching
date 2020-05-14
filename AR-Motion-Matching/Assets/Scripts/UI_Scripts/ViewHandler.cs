@@ -33,9 +33,7 @@ using System;using System.Collections;using System.Collections.Generic;using 
     }
 
     //Changes from main page to category page based on user decision 
-    public void ChangeMain(int mode)    {
-
-        DirectoryInfo tf = new DirectoryInfo(Application.streamingAssetsPath);        DirectoryInfo[] ti = tf.GetDirectories();        foreach (DirectoryInfo item in ti)        {            Debug.Log("item = " + item);        }        MartialMode(mode);        if (Animator != null && animator != null)        {            InMain = false;            InCate = true;            FillScrollView();            ResetTrigger();            animator.SetTrigger("MainCate");        }    }
+    public void ChangeMain(int mode)    {        MartialMode(mode);        if (Animator != null && animator != null)        {            InMain = false;            InCate = true;            FillScrollView();            ResetTrigger();            animator.SetTrigger("MainCate");        }    }
 
     //Fills the category scroll view with cate buttons
     private void FillScrollView()    {        if (content_tech == null || content_cate == null)        {            Debug.LogError("Failed to find contents.");            return;        }        GameObject cate_item;        foreach (KeyValuePair<string, string> item in Cate_list)        {
@@ -62,6 +60,7 @@ using System;using System.Collections;using System.Collections.Generic;using 
 
     public void return_screen()
     {
+        Debug.Log("i was clicked");
         ResetTrigger();
         //Trying to exit from main page
         if (InMain)
