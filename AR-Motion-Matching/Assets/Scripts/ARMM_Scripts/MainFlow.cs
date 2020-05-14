@@ -11,13 +11,11 @@
 
     //Once the movements has stopped, load the two movements
     void Load_movements()
-    {        tech_move.Load_data(technique_name.selected_tech_path + ".dat");        user_move.Load_data(cap_user.user_file_location);        final_score();    }    void final_score()    {        object_norm_score = comp_move.Cross_correlation(user_move.Loaded_movement, tech_move.Loaded_movement);        if (object_norm_score < 0)        {            Debug.LogError("Failed to perform cross correlation.");            technique_name.obj_norm_score = 5000;
+    {        if (technique_name.selected_tech_path == "")            Debug.LogError("Didn't get a path from selection.");        tech_move.Load_data(technique_name.selected_tech_path + ".dat");        user_move.Load_data(cap_user.user_file_location);        final_score();    }    void final_score()    {        object_norm_score = comp_move.Cross_correlation(user_move.Loaded_movement, tech_move.Loaded_movement);        if (object_norm_score < 0)        {            Debug.LogError("Failed to perform cross correlation.");            technique_name.obj_norm_score = 126;
             //return;
         }        else        {            technique_name.obj_norm_score = object_norm_score;        }
 
         Load_Feedback();
-
-        //Debug.Log(object_norm_score);
     }    public void Load_Feedback()    {        SceneManager.LoadScene("Feedback");    }    public void Load_MainUI()    {        SceneManager.LoadScene("MainUI");    }    public void Load_ARMm()    {        SceneManager.LoadScene("ARMm");    }
 
 

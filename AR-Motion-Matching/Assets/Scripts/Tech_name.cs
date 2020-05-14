@@ -26,7 +26,7 @@ public class Tech_name : MonoBehaviour
     void Start()
     {
         selected_tech_path = "";
-        obj_norm_score = -1;
+        obj_norm_score = 125f;
     }
 
 }
