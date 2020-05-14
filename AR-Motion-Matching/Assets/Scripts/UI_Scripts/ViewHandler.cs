@@ -30,17 +30,20 @@ public class ViewHandler : MonoBehaviour
     bool InCate = false;
     bool InMain = true;
     bool InTech = false;
-    string cate_path = "/Resources/Category/";
+    string cate_path = "Category/";
     string tech_path = "/MotionsDB/";
+    string martial_path = "";
     string path_way;
     public string tech_folder;
     List<string> Martial_List;
 
     List<GameObject> cate_item_holder;
     List<GameObject> tech_item_holder;
+
     // Start is called before the first frame update
     void Start()
     {
+
         Martial_List = new List<string>();
         
         animator = Animator.GetComponent<Animator>();
@@ -53,7 +56,6 @@ public class ViewHandler : MonoBehaviour
         cate_item_holder = new List<GameObject>();
         tech_item_holder = new List<GameObject>();
         create_cate_list();
-        //Cate_JSON_maker();
         set_marital_list();
     }
 
@@ -110,7 +112,7 @@ public class ViewHandler : MonoBehaviour
 
     private void MartialMode(int mode)
     {
-        tech_path += Martial_List[mode] + "/";
+        martial_path = Martial_List[mode] + "/";
         //mode == 1-> takwando
         if (mode == 1)
         {
@@ -131,26 +133,9 @@ public class ViewHandler : MonoBehaviour
 
     private void create_cate_list()
     {
-        
-#if UNITY_EDITOR
-         path_way = "Assets";
-#elif UNITY_IOS
-        path_way = Application.persistentDataPath;
-#elif UNITY_ANDROID
-        path_way = Application.persistentDataPath;
-#endif
 
-        Cate_list_takwando.Add(new KeyValuePair<string, string>("Kick_Techniques", path_way + cate_path + "cate_kick.png"));
-        Cate_list_takwando.Add(new KeyValuePair<string, string>("Hand_Techniques", path_way + cate_path + "cate_punch.png"));
-        Cate_list_takwando.Add(new KeyValuePair<string, string>("Stances", path_way + cate_path + "cate_stance.png"));
-        Cate_list_takwando.Add(new KeyValuePair<string, string>("Combinations_Techniques", path_way + cate_path + "cate_combination.png"));
-        Cate_list_takwando.Add(new KeyValuePair<string, string>("Poomase", path_way + cate_path + "cate_poomase.png"));
 
-        Cate_list_karate.Add(new KeyValuePair<string, string>("Kick_Techniques", path_way + cate_path + "cate_kick.png"));
-        Cate_list_karate.Add(new KeyValuePair<string, string>("Hand_Techniques", path_way + cate_path + "cate_punch.png"));
-        Cate_list_karate.Add(new KeyValuePair<string, string>("Stances", path_way + cate_path + "cate_stance.png"));
-        Cate_list_karate.Add(new KeyValuePair<string, string>("Combinations_Techniques", path_way + cate_path + "cate_combination.png"));
-        Cate_list_karate.Add(new KeyValuePair<string, string>("Kata", path_way + "/Resources/Category/cate_kata.png"));
+        Cate_list_takwando.Add(new KeyValuePair<string, string>("Kick_Techniques", cate_path + "cate_kick"));        Cate_list_takwando.Add(new KeyValuePair<string, string>("Hand_Techniques", cate_path + "cate_punch"));        Cate_list_takwando.Add(new KeyValuePair<string, string>("Stances", cate_path + "cate_stance"));        Cate_list_takwando.Add(new KeyValuePair<string, string>("Combinations_Techniques", cate_path + "cate_combination"));        Cate_list_takwando.Add(new KeyValuePair<string, string>("Poomase", cate_path + "cate_poomase"));        Cate_list_karate.Add(new KeyValuePair<string, string>("Kick_Techniques", cate_path + "cate_kick"));        Cate_list_karate.Add(new KeyValuePair<string, string>("Hand_Techniques", cate_path + "cate_punch"));        Cate_list_karate.Add(new KeyValuePair<string, string>("Stances", cate_path + "cate_stance"));        Cate_list_karate.Add(new KeyValuePair<string, string>("Combinations_Techniques", cate_path + "cate_combination"));        Cate_list_karate.Add(new KeyValuePair<string, string>("Kata", cate_path + "cate_kata"));
     }
 
     //Changes from category panel to technique panel and the other way around
@@ -197,18 +182,23 @@ public class ViewHandler : MonoBehaviour
             //Finds the first component which is a text and change its propierty 
             cate_item.transform.GetChild(0).transform.GetChild(0).GetComponent<Text>().text = item.Key;
             //Finds the image component and change its image
-            cate_item.transform.GetChild(0).transform.GetChild(1).GetComponent<Image>().sprite = Cate_image_filler(item.Value);
-            //Changes the name of the object
+            //var textFile = Resources.Load<txt>("Text/textFile01");
+
+            //var sprite = Resources.Load<Sprite>("Sprites/sprite01");
+
+            cate_item.transform.GetChild(0).transform.GetChild(1).GetComponent<Image>().sprite = Resources.Load<Sprite>(item.Value); //Cate_image_filler(item.Value);
+                                                                                                                                     //Changes the name of the object
             cate_item.transform.name = item.Key;
             //Adds an onclick listener 
-            cate_item.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(Selected_category);
-            cate_item_holder.Add(cate_item);
+            cate_item.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(Selected_category);            cate_item_holder.Add(cate_item);
         }
     }
 
     void Selected_category()
     {
-        tech_folder = path_way + tech_path + ((EventSystem.current.currentSelectedGameObject.GetComponentInParent<Transform>()).parent.name);
+#if UNITY_EDITOR        path_way = Application.streamingAssetsPath;#elif UNITY_IOS        path_way = Application.streamingAssetsPath;#elif UNITY_ANDROID         path_way = Application.streamingAssetsPath;#endif
+
+        tech_folder = path_way + tech_path + martial_path + ((EventSystem.current.currentSelectedGameObject.GetComponentInParent<Transform>()).parent.name);
         FillTechScrollView();
         ChangeView();
     }
@@ -242,19 +232,17 @@ public class ViewHandler : MonoBehaviour
 
     void load_selected_tech()
     {
-        selected_technique.selected_tech_path = Path.Combine(tech_folder, (EventSystem.current.currentSelectedGameObject.GetComponentInParent<Transform>()).parent.name);
-        Debug.Log("technqiue chosen is: " + selected_technique.selected_tech_path);
-        loadARMm();
+        selected_technique.selected_tech_path = Path.Combine(tech_folder, (EventSystem.current.currentSelectedGameObject.GetComponentInParent<Transform>()).parent.name);        Debug.Log("technqiue chosen is: " + selected_technique.selected_tech_path);        loadARMm();
     }
 
-    private Sprite Cate_image_filler(string path)
-    {
-        Texture2D texture = null;
-        Byte[] file = File.ReadAllBytes(path);
-        texture = new Texture2D(2, 2, TextureFormat.RGB24, false);
-        texture.LoadImage(file);
-        return Sprite.Create(texture, new Rect(0,0, texture.width, texture.height), new Vector2(0.5f,0.5f) );
-    }
+    //private Sprite Cate_image_filler(string path)
+    //{
+    //    Texture2D texture = null;
+    //    Byte[] file = File.ReadAllBytes(path);
+    //    texture = new Texture2D(2, 2, TextureFormat.RGB24, false);
+    //    texture.LoadImage(file);
+    //    return Sprite.Create(texture, new Rect(0,0, texture.width, texture.height), new Vector2(0.5f,0.5f) );
+    //}
 
     private void ResetTrigger()
     {
@@ -268,65 +256,6 @@ public class ViewHandler : MonoBehaviour
     {
         SceneManager.LoadScene("ARMm", LoadSceneMode.Single);
     }
-
-
-
-
-    /*  private void Cate_JSON_maker()
-      {
-          if (File.Exists("/Data_Files/Cate_main"))
-          {
-              return;
-          }
-
-          //File.Create("/Data_Files/Cate_main");
-          Cate_main test = new Cate_main();
-          cate_name cate_list = new cate_name("basic");
-          cate_list.tech_list = new List<tech_item>();
-          test.cate_list = new List<cate_name>();
-          tech_item punch = new tech_item("punch");
-          tech_item kick = new tech_item("kick");
-
-
-          cate_list.tech_list.Add(punch);
-          Debug.Log(cate_list.tech_list[0].tech_name);
-          cate_list.tech_list.Add(kick);
-          Debug.Log(cate_list.tech_list[1].tech_name);
-
-          test.cate_list.Add(cate_list);
-          Debug.Log(test.cate_list[0].tech_list[0].tech_name);
-          string s = JsonUtility.ToJson(test);
-          Debug.Log(s);
-          Cate_main main_2 = JsonUtility.FromJson<Cate_main>(s);
-          Debug.Log(main_2.cate_list[0].tech_list[0].tech_name);
-
-
-      }
-      [Serializable]
-      public class Cate_main
-      {
-          public List<cate_name> cate_list; 
-      }
-      [Serializable]
-      public class cate_name
-      {
-          public string cate_title;
-          public List<tech_item> tech_list;
-          public cate_name(string name)
-          {
-              cate_title = name;
-          }
-      }
-      [Serializable]
-      public class tech_item
-      {
-          public string tech_name;
-          public tech_item (string tech)
-          {
-              tech_name = tech;
-          }
-      }
-      */
 
 
 
