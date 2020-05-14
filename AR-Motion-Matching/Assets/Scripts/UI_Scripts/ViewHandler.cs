@@ -199,6 +199,7 @@ public class ViewHandler : MonoBehaviour
 #if UNITY_EDITOR        path_way = Application.streamingAssetsPath;#elif UNITY_IOS        path_way = Application.streamingAssetsPath;#elif UNITY_ANDROID         path_way = Application.streamingAssetsPath;#endif
 
         tech_folder = path_way + tech_path + martial_path + ((EventSystem.current.currentSelectedGameObject.GetComponentInParent<Transform>()).parent.name);
+        Debug.Log("folder is: " + tech_folder);
         FillTechScrollView();
         ChangeView();
     }
@@ -258,5 +259,5 @@ public class ViewHandler : MonoBehaviour
     }
 
 
-
+    
 }

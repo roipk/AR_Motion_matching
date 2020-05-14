@@ -6,6 +6,7 @@ using UnityEngine;
 public class Tech_name : MonoBehaviour
 {
     public string selected_tech_path;
+    public float obj_norm_score;
     static bool created = false;
 
     private void Awake()
@@ -24,7 +25,8 @@ public class Tech_name : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        selected_tech_path = ""; 
+        selected_tech_path = "";
+        obj_norm_score = -1;
     }
 
 }
