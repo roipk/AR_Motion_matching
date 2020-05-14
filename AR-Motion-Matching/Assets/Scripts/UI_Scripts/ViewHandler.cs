@@ -21,14 +21,7 @@ using System;using System.Collections;using System.Collections.Generic;using 
         set_marital_list();    }
 
     // Update is called once per frame
-    void Update()    {        if (Input.GetKeyDown(KeyCode.Escape))        {            ResetTrigger();
-            //Trying to exit from main page
-            if (InMain)            {                Exit.SetActive(true);            }
-            //Trying to exit from category page
-            else if (InCate)            {                Cate_list = null;
-                for (int i = 0; i < cate_item_holder.Count; i++)                {                    Destroy(cate_item_holder[i]);                }                InCate = false;                InMain = true;                animator.SetTrigger("CateMain");            }
-            //Try to exit from technique page
-            else if (InTech)            {                Cate_list = null;                for (int i = 0; i < tech_item_holder.Count; i++)                {                    Destroy(tech_item_holder[i]);                }                InTech = false;                InCate = true;                animator.SetTrigger("TechCate");            }        }    }    void set_marital_list()    {        Martial_List.Add("null");        Martial_List.Add("Takwando");        Martial_List.Add("Karate");    }    public void ExitApp()    {        Application.Quit();    }    private void MartialMode(int mode)    {        martial_path = Martial_List[mode] + "/";
+    void Update()    {        if (Input.GetKeyDown(KeyCode.Escape))        {            return_screen();        }    }    void set_marital_list()    {        Martial_List.Add("null");        Martial_List.Add("Takwando");        Martial_List.Add("Karate");    }    public void ExitApp()    {        Application.Quit();    }    private void MartialMode(int mode)    {        martial_path = Martial_List[mode] + "/";
         //mode == 1-> takwando
         if (mode == 1)        {            Cate_list = Cate_list_takwando;        }
         //mode == 2 -> Karate
@@ -61,23 +54,45 @@ using System;using System.Collections;using System.Collections.Generic;using 
 
 
 #if UNITY_EDITOR        path_way = Application.streamingAssetsPath;
-
-
-
-
-
 #elif UNITY_IOS        path_way = Application.streamingAssetsPath;
 #elif UNITY_ANDROID         path_way = Application.streamingAssetsPath;
 #endif
         tech_folder = path_way + tech_path + martial_path + ((EventSystem.current.currentSelectedGameObject.GetComponentInParent<Transform>()).parent.name);        FillTechScrollView();        ChangeView();    }
 
 
-
-
-
-
-
-
+    public void return_screen()
+    {
+        ResetTrigger();
+        //Trying to exit from main page
+        if (InMain)
+        {
+            Exit.SetActive(true);
+        }
+        //Trying to exit from category page
+        else if (InCate)
+        {
+            Cate_list = null;
+            for (int i = 0; i < cate_item_holder.Count; i++)
+            {
+                Destroy(cate_item_holder[i]);
+            }
+            InCate = false;
+            InMain = true;
+            animator.SetTrigger("CateMain");
+        }
+        //Try to exit from technique page
+        else if (InTech)
+        {
+            Cate_list = null;
+            for (int i = 0; i < tech_item_holder.Count; i++)
+            {
+                Destroy(tech_item_holder[i]);
+            }
+            InTech = false;
+            InCate = true;
+            animator.SetTrigger("TechCate");
+        }
+    }
     private void FillTechScrollView()    {        if (tech_folder == null && !Directory.Exists(tech_folder))        {            Debug.LogError("Tech_Folder is empty or doesnt exists");            return;
 
         }        DirectoryInfo tech_files = new DirectoryInfo(tech_folder);        FileInfo[] tech_items = tech_files.GetFiles("*.dat");        if (tech_items.Length < 1)        {            Debug.LogError("No techniques in folder!");            return;        }        GameObject tech_item;        foreach (FileInfo item in tech_items)        {
