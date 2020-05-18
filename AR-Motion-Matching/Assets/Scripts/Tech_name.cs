@@ -7,8 +7,9 @@
     {
         public string selected_tech_path;
         public float obj_norm_score;
-    public bool DEBUG_MODE;
-        UnityEngine.XR.ARFoundation.ARSessionState ARState;
+        public bool DEBUG_MODE = false;
+        public bool first_camera = false;
+        //UnityEngine.XR.ARFoundation.ARSessionState ARState;
         static bool created = false;
 
         private void Awake()
@@ -31,6 +32,7 @@
             selected_tech_path = "";
             obj_norm_score = 125f;
             DEBUG_MODE = false;
+            first_camera = false;
         }
 
         //private void Update()

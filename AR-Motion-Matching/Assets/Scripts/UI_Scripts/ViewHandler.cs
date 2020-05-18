@@ -1,11 +1,14 @@
 ﻿/************* *This class handles the main UI components. *The basic flow of the UI will run from here. *Sends to ARMm the path to the selected technique * * ***********/
-using System;using System.Collections;using System.Collections.Generic;using System.IO;using UnityEngine;using UnityEngine.UI;using UnityEngine.SceneManagement;using UnityEngine.EventSystems;public class ViewHandler : MonoBehaviour{    public GameObject Animator;    public GameObject Exit;    public GameObject cath_btn;    public GameObject tech_btn;    public GameObject recording_ui_btn;    GameObject content_cate, content_tech;    Tech_name selected_technique;    Animator animator;    List<KeyValuePair<string, string>> Cate_list;    List<KeyValuePair<string, string>> Cate_list_takwando;    List<KeyValuePair<string, string>> Cate_list_karate;    bool InCate = false;    bool InMain = true;    bool InTech = false;    string cate_path = "Category/";    string tech_path = "/MotionsDB/";    string martial_path = "";    string path_way;    public string tech_folder;    bool recording_ui = false;    List<string> Martial_List;
+using System;using System.Collections;using System.Collections.Generic;using System.IO;using UnityEngine;using UnityEngine.UI;using UnityEngine.SceneManagement;using UnityEngine.EventSystems;public class ViewHandler : MonoBehaviour{    public GameObject Animator;    public GameObject Exit;    public GameObject cath_btn;    public GameObject tech_btn;    public GameObject recording_ui_btn;    public GameObject once_camera;    GameObject content_cate, content_tech;    Tech_name selected_technique;    Animator animator;    List<KeyValuePair<string, string>> Cate_list;    List<KeyValuePair<string, string>> Cate_list_takwando;    List<KeyValuePair<string, string>> Cate_list_karate;    bool InCate = false;    bool InMain = true;    bool InTech = false;    string cate_path = "Category/";    string tech_path = "/MotionsDB/";    string martial_path = "";    string path_way;    public string tech_folder;    bool recording_ui = false;    List<string> Martial_List;
 
     List<GameObject> cate_item_holder;    List<GameObject> tech_item_holder;
     // Start is called before the first frame update
     void Start()    {        Martial_List = new List<string>();
 
-        animator = Animator.GetComponent<Animator>();        content_cate = GameObject.Find("Content_Cate");        content_tech = GameObject.Find("Content_Tech");        selected_technique = GameObject.Find("Selected_tech").GetComponent<Tech_name>();        Cate_list = new List<KeyValuePair<string, string>>();        Cate_list_karate = new List<KeyValuePair<string, string>>();        Cate_list_takwando = new List<KeyValuePair<string, string>>();        cate_item_holder = new List<GameObject>();        tech_item_holder = new List<GameObject>();        create_cate_list();
+        animator = Animator.GetComponent<Animator>();        content_cate = GameObject.Find("Content_Cate");        content_tech = GameObject.Find("Content_Tech");        selected_technique = GameObject.Find("Selected_tech").GetComponent<Tech_name>();        Cate_list = new List<KeyValuePair<string, string>>();        Cate_list_karate = new List<KeyValuePair<string, string>>();        Cate_list_takwando = new List<KeyValuePair<string, string>>();        cate_item_holder = new List<GameObject>();        tech_item_holder = new List<GameObject>();        if (selected_technique.first_camera)
+        {
+            once_camera.SetActive(false);
+        }        create_cate_list();
         //Cate_JSON_maker();
         set_marital_list();    }
 
@@ -88,7 +91,17 @@ using System;using System.Collections;using System.Collections.Generic;using 
         }        DirectoryInfo tech_files = new DirectoryInfo(tech_folder);        FileInfo[] tech_items = tech_files.GetFiles("*.dat");        if (tech_items.Length < 1)        {            Debug.LogError("No techniques in folder!");            return;        }        GameObject tech_item;        foreach (FileInfo item in tech_items)        {
 
             tech_item = Instantiate(tech_btn);            tech_item.transform.SetParent(content_tech.transform);            tech_item.transform.GetChild(0).transform.GetChild(0).GetComponent<Text>().text = Path.GetFileNameWithoutExtension(item.Name);            tech_item.transform.name = Path.GetFileNameWithoutExtension(item.Name);            tech_item.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(loadARMm);            tech_item_holder.Add(tech_item);        }    }    //void load_selected_tech()    //{    //    selected_technique.selected_tech_path = Path.Combine(tech_folder, (EventSystem.current.currentSelectedGameObject.GetComponentInParent<Transform>()).parent.name);    //    loadARMm();    //}    //private Sprite Cate_image_filler(string path)    //{    //    Texture2D texture = null;    //    Byte[] file = File.ReadAllBytes(path);    //    texture = new Texture2D(2, 2, TextureFormat.RGB24, false);    //    texture.LoadImage(file);    //    return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));    //}    private void ResetTrigger()    {        animator.ResetTrigger("CateTech");        animator.ResetTrigger("CateMain");        animator.ResetTrigger("MainCate");        animator.ResetTrigger("CateMain");    }    public void loadARMm()    {
-        selected_technique.selected_tech_path = Path.Combine(tech_folder, (EventSystem.current.currentSelectedGameObject.GetComponentInParent<Transform>()).parent.name);        SceneManager.UnloadSceneAsync("MainUI");        //SceneManager.LoadScene("ARMm", LoadSceneMode.Single);    }    public void Enable_recording() {        if (InTech)
+        selected_technique.selected_tech_path = Path.Combine(tech_folder, (EventSystem.current.currentSelectedGameObject.GetComponentInParent<Transform>()).parent.name);
+        if (!selected_technique.first_camera)
+        {
+            SceneManager.LoadScene("ARMm", LoadSceneMode.Single);
+        }
+        else
+        {
+            SceneManager.UnloadSceneAsync("MainUI");
+        }
+        selected_technique.first_camera = true;
+                        //SceneManager.LoadScene("ARMm", LoadSceneMode.Single);    }    public void Enable_recording() {        if (InTech)
         {
             if (recording_ui)
             {
