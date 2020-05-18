@@ -10,6 +10,7 @@ using System.IO;
 using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class QuickCapture : MonoBehaviour
 {
@@ -18,22 +19,21 @@ public class QuickCapture : MonoBehaviour
     public InputField Move_name;
     public Text record_mode;
     public Text log;
-    
+    Tech_name technique_name;
     bool recording_state = false;
     int frames = 0;
     string movement_path = "";
     string target_folder = "/TargetMotionDB";
     string rec_on = "Recording", rec_off = "Not Recording";
     float time = 0.0f;
-    Animation anim;    AnimationClip clip;
     List<BodySegment> bp_list;
     List<BodySegment> skele_data = new List<BodySegment>();
-    float frame_rate = 5;
+    float frame_rate = 1;
 
     // Start is called before the first frame update
     void Start()
     {
-        clip = new AnimationClip();        clip.legacy = true;
+        technique_name = GameObject.Find("Selected_tech").GetComponent<Tech_name>();
         bp_list = new List<BodySegment>();
         record_mode.text = rec_off;
         start_btn.onClick.AddListener(Start_record);
@@ -110,52 +110,58 @@ public class QuickCapture : MonoBehaviour
         foreach (KeyValuePair<JointIndices3D, Transform> BodyPart in HumanBodyTracking.bodyJoints)
         {
             bp_list.Add(new BodySegment(BodyPart.Key.ToString(), time, BodyPart.Value.position, BodyPart.Value.rotation));
-            //Writes the name of the body part
-            //bf.Serialize(fs, BodyPart.Key);
-            //Writes the current time
-           // bf.Serialize(fs, time);
-            //Create a SerializableVector3 from the bodypart location
-            //Writes the new data into the file
-            //bf.Serialize(fs, (SerializableVector3)BodyPart.Value.position);
-            //Create a SerializableQuaternion from the bodypart rotation
-            //Writes the new data into the file
-            //bf.Serialize(fs, (SerializableQuaternion)BodyPart.Value.rotation);
         }
         bf.Serialize(fs, bp_list);
         time += Time.deltaTime;
 
     }
 
-    void load_movement()
-    {
-        string path = Application.dataPath + "/Roi.dat";
-        Debug.Log(path);
-        if (File.Exists(path))        {            Debug.Log("In log");            BinaryFormatter bf = new BinaryFormatter();            FileStream tech_file = File.Open(path, FileMode.Open);            List<BodySegment> out_data = (List<BodySegment>)bf.Deserialize(tech_file);            print("list count is: " +out_data.Count);            foreach(BodySegment item in out_data)
-            {
-                print(item.ToString());
-            }            //for (int  i = 0; i < 100; i++)
-            //{
-               // var tech_name = bf.Deserialize(tech_file);
-               // float tech_time = (float)bf.Deserialize(tech_file);
-              //  Vector3 tech_vector = (SerializableVector3)bf.Deserialize(tech_file);
-               // Quaternion tech_rot = (SerializableQuaternion)bf.Deserialize(tech_file);
-              //  Debug.Log("body part: " + tech_name + "\ntime: " + tech_time + "\nvector is: " + tech_vector + "\n quat is: " + tech_rot); 
-           // }                                                tech_file.Close();        }
-    }
+    //void load_movement()
+    //{
+    //    string path = Application.dataPath + "/Roi.dat";
+    //    Debug.Log(path);
+    //    if (File.Exists(path))
+    //    {
+    //        Debug.Log("In log");
+    //        BinaryFormatter bf = new BinaryFormatter();
+    //        FileStream tech_file = File.Open(path, FileMode.Open);
+    //        List<BodySegment> out_data = (List<BodySegment>)bf.Deserialize(tech_file);
+    //        print("list count is: " +out_data.Count);
+    //        foreach(BodySegment item in out_data)
+    //        {
+    //            print(item.ToString());
+    //        }
+    //        //for (int  i = 0; i < 100; i++)
+    //        //{
+    //           // var tech_name = bf.Deserialize(tech_file);
+    //           // float tech_time = (float)bf.Deserialize(tech_file);
+    //          //  Vector3 tech_vector = (SerializableVector3)bf.Deserialize(tech_file);
+    //           // Quaternion tech_rot = (SerializableQuaternion)bf.Deserialize(tech_file);
+    //          //  Debug.Log("body part: " + tech_name + "\ntime: " + tech_time + "\nvector is: " + tech_vector + "\n quat is: " + tech_rot); 
+    //       // }
 
-    void add_tags()
-    {
-        foreach (KeyValuePair<JointIndices3D, Transform> BodyPart in HumanBodyTracking.bodyJoints)
-        {
-            BodyPart.Value.gameObject.tag = "BodyPart";
-        }
-    }
+
+
+
+    //        tech_file.Close();
+    //    }
+    //}
+
+    //void add_tags()
+    //{
+    //    foreach (KeyValuePair<JointIndices3D, Transform> BodyPart in HumanBodyTracking.bodyJoints)
+    //    {
+    //        BodyPart.Value.gameObject.tag = "BodyPart";
+    //    }
+    //}
 
     bool get_device_path()
     {
         //Checks if the technique name is a valid one
         if (Move_name.text.LastIndexOfAny(Path.GetInvalidFileNameChars()) >= 0 && !Move_name.text.Equals(string.Empty))
             return false;
+
+
 
 #if UNITY_EDITOR        movement_path = Path.Combine(Application.dataPath + target_folder, Move_name.text + ".dat");
 
@@ -169,7 +175,7 @@ public class QuickCapture : MonoBehaviour
     void Start_record()
     {
         create_dir();
-        load_movement();        
+        //load_movement();        
         
         if (!recording_state)
         {
@@ -207,6 +213,18 @@ public class QuickCapture : MonoBehaviour
             record_mode.text = rec_off;
         }
 
+    }
+
+    string get_folder_path()
+    {
+        string folder_path = Path.GetDirectoryName(technique_name.selected_tech_path);
+        print("folder path is: " + folder_path);
+        return "";
+    }
+
+    void Copy_movement_to_tech()
+    {
+        FileUtil.CopyFileOrDirectory(movement_path, "destpath/YourFileOrFolder");
     }
 
   
