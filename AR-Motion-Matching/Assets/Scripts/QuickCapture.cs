@@ -46,13 +46,10 @@ public class QuickCapture : MonoBehaviour
         
         if (recording_state)
         {
-            //Debug.Log("in update");
+
             frames++;
-            //Debug.Log(frames);
-            //Writes to File every 30 frames
             if (frames % frame_rate == 0)
             {
-                //Debug.Log("every frame");
                 if (HumanBodyTracking.Body_flag) {
                     record_movement();
                 }
@@ -67,6 +64,7 @@ public class QuickCapture : MonoBehaviour
 
     IEnumerator create_dir()
     {
+        
         string dir_path = "";
 #if UNITY_EDITOR
         dir_path = Application.dataPath + target_folder;
@@ -75,10 +73,13 @@ public class QuickCapture : MonoBehaviour
         dir_path = Application.persistentDataPath + target_folder;
 
 #endif
+        
         if (!Directory.Exists(dir_path))
         {
+            Debug.Log("Trying to create dir: " + dir_path);
             Directory.CreateDirectory(dir_path);
         }
+        
         yield return new WaitForSeconds(0.5f);
     }
 
@@ -95,7 +96,6 @@ public class QuickCapture : MonoBehaviour
         }
         else if (File.Exists(movement_path))
         {
-            
             FileStream tech_file = File.Open(movement_path, FileMode.Append);
             write_body_part(tech_file);
 
@@ -115,38 +115,6 @@ public class QuickCapture : MonoBehaviour
         time += Time.deltaTime;
 
     }
-
-    //void load_movement()
-    //{
-    //    string path = Application.dataPath + "/Roi.dat";
-    //    Debug.Log(path);
-    //    if (File.Exists(path))
-    //    {
-    //        Debug.Log("In log");
-    //        BinaryFormatter bf = new BinaryFormatter();
-    //        FileStream tech_file = File.Open(path, FileMode.Open);
-    //        List<BodySegment> out_data = (List<BodySegment>)bf.Deserialize(tech_file);
-    //        print("list count is: " +out_data.Count);
-    //        foreach(BodySegment item in out_data)
-    //        {
-    //            print(item.ToString());
-    //        }
-    //        //for (int  i = 0; i < 100; i++)
-    //        //{
-    //           // var tech_name = bf.Deserialize(tech_file);
-    //           // float tech_time = (float)bf.Deserialize(tech_file);
-    //          //  Vector3 tech_vector = (SerializableVector3)bf.Deserialize(tech_file);
-    //           // Quaternion tech_rot = (SerializableQuaternion)bf.Deserialize(tech_file);
-    //          //  Debug.Log("body part: " + tech_name + "\ntime: " + tech_time + "\nvector is: " + tech_vector + "\n quat is: " + tech_rot); 
-    //       // }
-
-
-
-
-    //        tech_file.Close();
-    //    }
-    //}
-
     //void add_tags()
     //{
     //    foreach (KeyValuePair<JointIndices3D, Transform> BodyPart in HumanBodyTracking.bodyJoints)
@@ -160,12 +128,7 @@ public class QuickCapture : MonoBehaviour
         //Checks if the technique name is a valid one
         if (Move_name.text.LastIndexOfAny(Path.GetInvalidFileNameChars()) >= 0 && !Move_name.text.Equals(string.Empty))
             return false;
-
-
-
 #if UNITY_EDITOR        movement_path = Path.Combine(Application.dataPath + target_folder, Move_name.text + ".dat");
-
-
 #elif UNITY_IOS        movement_path = Path.Combine(Application.persistentDataPath + target_folder, Move_name.text + ".dat");
 #endif
         return true;
@@ -174,7 +137,8 @@ public class QuickCapture : MonoBehaviour
 
     void Start_record()
     {
-        create_dir();
+        StartCoroutine(create_dir());
+        
         //load_movement();        
         
         if (!recording_state)
@@ -184,7 +148,7 @@ public class QuickCapture : MonoBehaviour
             {
                 Debug.LogWarning("Human Body not detected.");
                 log.text += "\nHuman Body not detected.";
-                //return;
+                return;
             }
             //If a invalid name was entered, do nothing.
             if (!get_device_path())
@@ -211,20 +175,25 @@ public class QuickCapture : MonoBehaviour
             recording_state = false;
             record_mode.color = Color.red;
             record_mode.text = rec_off;
+            Copy_movement_to_tech();
         }
 
     }
 
     string get_folder_path()
     {
-        string folder_path = Path.GetDirectoryName(technique_name.selected_tech_path);
-        print("folder path is: " + folder_path);
+        string folder_path = Path.Combine(Path.GetDirectoryName(technique_name.selected_tech_path), Move_name.text + ".dat");
+        if (folder_path != "")
+            return folder_path;
         return "";
     }
 
     void Copy_movement_to_tech()
     {
-        FileUtil.CopyFileOrDirectory(movement_path, "destpath/YourFileOrFolder");
+       if(File.Exists(movement_path))
+            FileUtil.CopyFileOrDirectory(movement_path, get_folder_path());
+       else
+            Debug.LogError("Failed to copy " + movement_path + " to " + get_folder_path());
     }
 
   
