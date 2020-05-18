@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ARMm.unity
     guid: 9fc1f5ed98d414310a8b9e659c295d7c
+  - enabled: 1
+    path: Assets/Scenes/Feedback.unity
+    guid: 094666e2857d64010ae5e101a630b24f
   m_configObjects:
     com.unity.xr.arkit.PlayerSettings: {fileID: 11400000, guid: 2d5fb8e61571b4e3897f221189089fd6,
       type: 2}

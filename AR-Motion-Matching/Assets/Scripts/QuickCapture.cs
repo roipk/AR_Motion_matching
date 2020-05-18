@@ -190,9 +190,9 @@ public class QuickCapture : MonoBehaviour
 
     void Copy_movement_to_tech()
     {
-       if(File.Exists(movement_path))
-            FileUtil.CopyFileOrDirectory(movement_path, get_folder_path());
-       else
+        if (File.Exists(movement_path))
+            File.Copy(movement_path, get_folder_path());
+        else
             Debug.LogError("Failed to copy " + movement_path + " to " + get_folder_path());
     }
 
